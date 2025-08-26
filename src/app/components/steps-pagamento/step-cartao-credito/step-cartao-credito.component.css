@@ -1,0 +1,33 @@
+.mb-3 label {
+  font-weight: 500;
+  text-align: left;
+  display: block;
+}
+
+form {
+  max-width: 100%;
+  width: 100%;
+}
+
+button[type="submit"] {
+  margin-top: 1rem;
+  background: #38B6FF;
+  border: none;
+  color: #fff;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+button[type="submit"]:hover, button[type="submit"]:focus {
+  background: #2596d4;
+  color: #fff;
+}
+
+input.form-control:focus {
+  box-shadow: 0 0 0 0.2rem #38B6FF40;
+  border-color: #38B6FF;
+}
+
+.invalid-feedback {
+  text-align: left;
+  display: block;
+} 

@@ -1,0 +1,22 @@
+<div class="toast-container">
+  <div 
+    *ngFor="let message of messages" 
+    class="toast show" 
+    role="alert" 
+    aria-live="assertive" 
+    aria-atomic="true">
+    <div class="toast-header" [ngClass]="getToastHeaderClass(message.type)">
+      <strong class="me-auto">{{ getToastTitle(message.type) }}</strong>
+      <button 
+        type="button" 
+        class="btn-close" 
+        (click)="removeMessage(message.id)"
+        aria-label="Close">
+        ×
+      </button>
+    </div>
+    <div class="toast-body" [ngClass]="getToastHeaderClass(message.type)">
+      {{ message.message }}
+    </div>
+  </div>
+</div> 

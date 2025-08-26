@@ -1,0 +1,13 @@
+<nav class="side-menu">
+  <ng-container [ngSwitch]="userRole">
+    <ng-container *ngSwitchCase="'administrador'">
+      <app-admin-menu></app-admin-menu>
+    </ng-container>
+    <ng-container *ngSwitchCase="'vendedor'">
+      <app-vendedor-menu></app-vendedor-menu>
+    </ng-container>
+    <ng-container *ngSwitchCase="'cliente'">
+      <app-cliente-menu></app-cliente-menu>
+    </ng-container>
+  </ng-container>
+</nav> 

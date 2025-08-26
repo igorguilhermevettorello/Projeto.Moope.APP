@@ -1,0 +1,65 @@
+<div class="planos-container">
+  <h2 class="titulo">PLANOS DISPONÍVEIS</h2>
+  <p class="subtitulo">A Moope tem o plano perfeito para segurança de seu veículo.</p>
+  <div class="planos-grid">
+    <!-- Plano Básico -->
+    <ng-container *ngIf="showPlanoBasico()">
+      <div class="plano-card">
+        <div class="plano-header plano-card-padding">
+          <span class="plano-nome">PLANO BÁSICO</span>
+          <span class="badge-vendido">MAIS VENDIDO</span>
+        </div>
+        <div class="plano-preco-area basico">
+          <span class="plano-preco">R$ <span class="preco-grande">59</span><span class="preco-centavos">,00</span></span>
+          <span class="plano-mes">/Mensais</span>
+        </div>
+        <ul class="plano-beneficios plano-card-padding">
+          <li><span class="li-icon">&#9432;</span>Bloqueio do motor do seu veículo pelo aplicativo.</li>
+          <hr class="beneficio-hr" />
+          <li><span class="li-icon">&#9432;</span>Trajetos e Rotas, distância percorrida, tempo de percurso e tempo parado.</li>
+          <hr class="beneficio-hr" />
+          <li><span class="li-icon">&#9432;</span>Alertas e notificação de movimento, choque e vibração.</li>
+          <hr class="beneficio-hr" />
+          <li><span class="li-icon">&#9432;</span>Notificação de ignição para quando você ligar ou desligar o veículo.</li>
+          <hr class="beneficio-hr" />
+          <li><span class="li-icon">&#9432;</span>Alarmes e notificação do rastreador, como corte de energia e outros.</li>
+          <hr class="beneficio-hr" />
+          <li><span class="li-icon">&#9432;</span>Notificação de roubo ou furto pelo aplicativo através do site da PRF.</li>
+        </ul>
+        <button class="btn-comprar" *ngIf="showBtnCompra" (click)="comprar(codBasico)">Compra agora</button>
+      </div>
+    </ng-container>
+    <!-- Plano Premium -->
+    <ng-container *ngIf="showPlanoPremium()">
+      <div class="plano-card">
+        <div class="plano-header plano-card-padding">
+          <span class="plano-nome">PLANO PREMIUM</span>
+        </div>
+        <div class="plano-preco-area premium">
+          <span class="plano-preco">R$ <span class="preco-grande">79</span><span class="preco-centavos">,00</span></span>
+          <span class="plano-mes">/Mensais</span>
+        </div>
+        <ul class="plano-beneficios plano-card-padding">
+          <li><span class="li-icon">&#9432;</span><b>TODAS AS FUNÇÕES DO PLANO BÁSICO!</b></li>
+          <hr class="beneficio-hr" />
+          <li><span class="li-icon">&#9432;</span>Assistência 24 horas. Operada pela MAFA Seguros com cobertura nacional.</li>
+          <hr class="beneficio-hr" />
+          <li><span class="li-icon">&#9432;</span>Guincho até 200km de distância do local do sinistro.</li>
+          <hr class="beneficio-hr" />
+          <li><span class="li-icon">&#9432;</span>Auxílio mecânico para verificação de panes no veículo.</li>
+          <hr class="beneficio-hr" />
+          <li><span class="li-icon">&#9432;</span>Auxílio para troca de pneu e carga de bateria.</li>
+          <hr class="beneficio-hr" />
+          <li><span class="li-icon">&#9432;</span>Apólice / seguro para morte acidental ou Invalidez.</li>
+          <hr class="beneficio-hr" />
+          <li><span class="li-icon">&#9432;</span>Acesso à plataforma Gestão de veículos/Frotas.</li>
+        </ul>
+        <button class="btn-comprar" *ngIf="showBtnCompra" (click)="comprar(codPremium)">Compra agora</button>
+      </div>
+    </ng-container>
+  </div>
+  <div class="planos-obs">
+    <span class="obs-icon">&#9888;</span>
+    <span>O valor pode mudar em função do modelo do veículo. Consulte.</span>
+  </div>
+</div> 

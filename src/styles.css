@@ -1,0 +1,25 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
+
+/* Garantir que o toast seja exibido corretamente */
+app-toast {
+  position: fixed !important;
+  top: 0 !important;
+  right: 0 !important;
+  z-index: 9999 !important;
+  pointer-events: auto !important;
+}
+
+/* Sobrescrever qualquer estilo que possa estar escondendo o toast */
+.toast-container {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.toast {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}

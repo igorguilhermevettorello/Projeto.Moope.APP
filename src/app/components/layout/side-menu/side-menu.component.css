@@ -1,0 +1,10 @@
+.side-menu {
+  width: 240px;
+  background: #1B1464;
+  color: #fff;
+  height: 100%;
+  padding: 0px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+} 

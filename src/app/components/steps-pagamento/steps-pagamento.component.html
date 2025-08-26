@@ -1,0 +1,10 @@
+<div class="steps-container">
+  <div class="step" [class.active]="stepIndex === 1">1. Dados Pessoais</div>
+  <div class="step" [class.active]="stepIndex === 2">2. Pagamento</div>
+  <div class="step" [class.active]="stepIndex === 3">3. Confirmação</div>
+</div>
+<ng-container [ngSwitch]="stepIndex">
+  <app-step-dados-pessoais *ngSwitchCase="1" (next)="nextStep()"></app-step-dados-pessoais>
+  <app-step-pedido *ngSwitchCase="2" (next)="nextStep()" [plano]="plano"></app-step-pedido>
+  <app-step-cartao-credito *ngSwitchCase="3" (finalizar)="finalizarPagamento($event)"></app-step-cartao-credito>
+</ng-container> 

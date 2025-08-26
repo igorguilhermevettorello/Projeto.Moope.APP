@@ -1,0 +1,50 @@
+<div *ngIf="loading" class="loading-overlay">
+  <div class="spinner"></div>
+</div>
+<div class="login-container">
+  <div class="login-box">
+    <div class="text-center mb-4">
+      <img src="/moope.png" alt="Moope Logo" style="height: 60px;" />
+      <h2 class="mt-3">Acessar Conta</h2>
+    </div>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" id="email" class="form-control form-control-sm" formControlName="email" placeholder="seuemail@exemplo.com">
+        <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+          <small class="text-danger">{{ getEmailError() }}</small>
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="senha" class="form-label">Senha</label>
+        <input type="password" id="senha" class="form-control form-control-sm" formControlName="senha" placeholder="Sua senha">
+        <div *ngIf="loginForm.get('senha')?.invalid && loginForm.get('senha')?.touched">
+          <small class="text-danger">{{ getSenhaError() }}</small>
+        </div>
+      </div>
+      
+      <div class="mb-3">
+        <div
+          #recaptchaContainer
+          class="g-recaptcha"
+          [attr.data-sitekey]="recaptchaKey"
+          data-callback="recaptchaCallback">
+        </div>
+      </div>
+      <div *ngIf="loginRecaptcha" class="text-danger mt-1">
+        {{ loginRecaptcha }}
+      </div>
+
+      <div *ngIf="loginError" class="alert alert-danger">
+        {{ loginError }}
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100" [disabled]="loginForm.invalid">Entrar</button>
+
+    </form>
+    <div class="mt-3 text-center">
+      <a routerLink="/" class="text-decoration-none">Voltar para o início</a>
+    </div>
+  </div>
+</div>
+

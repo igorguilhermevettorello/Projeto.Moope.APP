@@ -1,0 +1,361 @@
+<div class="container mt-3">
+  <div class="row">
+    <div class="col-12">
+      <h4>{{ isEditMode ? 'Editar Representante' : 'Adicionar Representante' }}</h4>
+      
+      <!-- Navegação das abas -->
+      <ul class="nav nav-tabs" id="representanteTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button 
+            class="nav-link" 
+            [class.active]="activeTab === 'dados-pessoais'"
+            [class.text-success]="isTabValid('dados-pessoais') && activeTab !== 'dados-pessoais'"
+            type="button" 
+            (click)="setActiveTab('dados-pessoais')">
+            <i class="bi bi-person"></i>
+            Dados Pessoais
+            <i class="bi bi-check-circle-fill text-success ms-1" *ngIf="isTabValid('dados-pessoais') && activeTab !== 'dados-pessoais'"></i>
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button 
+            class="nav-link" 
+            [class.active]="activeTab === 'endereco'"
+            [class.text-success]="isTabValid('endereco') && activeTab !== 'endereco'"
+            type="button" 
+            (click)="setActiveTab('endereco')">
+            <i class="bi bi-geo-alt"></i>
+            Endereço
+            <i class="bi bi-check-circle-fill text-success ms-1" *ngIf="isTabValid('endereco') && activeTab !== 'endereco'"></i>
+          </button>
+        </li>
+        <li class="nav-item" role="presentation" *ngIf="!isEditMode">
+          <button 
+            class="nav-link" 
+            [class.active]="activeTab === 'dados-acesso'"
+            [class.text-success]="isTabValid('dados-acesso') && activeTab !== 'dados-acesso'"
+            type="button" 
+            (click)="setActiveTab('dados-acesso')">
+            <i class="bi bi-key"></i>
+            Dados de Acesso
+            <i class="bi bi-check-circle-fill text-success ms-1" *ngIf="isTabValid('dados-acesso') && activeTab !== 'dados-acesso'"></i>
+          </button>
+        </li>
+      </ul>
+
+      <form [formGroup]="representanteForm" (ngSubmit)="salvar()">
+        
+        <!-- Aba Dados Pessoais -->
+        <div class="tab-content" *ngIf="activeTab === 'dados-pessoais'">
+          <div class="row">
+            <div class="col-md-8 mb-3">
+              <label for="nome" class="form-label">Nome Completo *</label>
+              <input 
+                type="text" 
+                class="form-control form-control-sm" 
+                [class.is-invalid]="nome?.invalid && nome?.touched"
+                id="nome" 
+                placeholder="Digite o nome completo"
+                formControlName="nome"
+                required>
+              <div class="invalid-feedback" *ngIf="nome?.invalid && nome?.touched">
+                <div *ngIf="nome?.errors?.['required']">Nome é obrigatório</div>
+                <div *ngIf="nome?.errors?.['minlength']">Nome deve ter pelo menos 2 caracteres</div>
+              </div>
+            </div>
+
+            <div class="col-md-4 mb-3">
+              <label for="tipoPessoa" class="form-label">Tipo de Pessoa *</label>
+              <select 
+                class="form-select form-select-sm" 
+                [class.is-invalid]="tipoPessoa?.invalid && tipoPessoa?.touched"
+                id="tipoPessoa" 
+                formControlName="tipoPessoa"
+                required>
+                <option value="">Selecione o tipo de pessoa</option>
+                <option *ngFor="let tipo of tiposPessoa" [value]="tipo.value">{{ tipo.label }}</option>
+              </select>
+              <div class="invalid-feedback" *ngIf="tipoPessoa?.invalid && tipoPessoa?.touched">
+                <div *ngIf="tipoPessoa?.errors?.['required']">Tipo de pessoa é obrigatório</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="email" class="form-label">Email *</label>
+              <input 
+                type="email" 
+                class="form-control form-control-sm" 
+                [class.is-invalid]="email?.invalid && email?.touched"
+                id="email" 
+                placeholder="Digite o email"
+                formControlName="email"
+                required>
+              <div class="invalid-feedback" *ngIf="email?.invalid && email?.touched">
+                <div *ngIf="email?.errors?.['required']">Email é obrigatório</div>
+                <div *ngIf="email?.errors?.['email']">Email deve ter um formato válido</div>
+              </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label for="cpfCnpj" class="form-label">
+                {{ labelCpfCnpj }} *
+              </label>
+              <input 
+                type="text" 
+                class="form-control form-control-sm" 
+                [class.is-invalid]="cpfCnpj?.invalid && cpfCnpj?.touched"
+                id="cpfCnpj" 
+                [placeholder]="placeholderCpfCnpj"
+                [maxlength]="tipoPessoa?.value === '1' ? 14 : 18"
+                [disabled]="disabledCpfCnpj"
+                formControlName="cpfCnpj"
+                (input)="aplicarMascaraCpfCnpj($event)"
+                required>
+              <div class="invalid-feedback" *ngIf="cpfCnpj?.invalid && cpfCnpj?.touched">
+                <div *ngIf="cpfCnpj?.errors?.['required']">{{ tipoPessoa?.value === '1' ? 'CPF' : 'CNPJ' }} é obrigatório</div>
+                <div *ngIf="cpfCnpj?.errors?.['cpfInvalido']">CPF inválido</div>
+                <div *ngIf="cpfCnpj?.errors?.['cnpjInvalido']">CNPJ inválido</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="celular" class="form-label">Celular *</label>
+              <input 
+                type="text" 
+                class="form-control form-control-sm" 
+                [class.is-invalid]="celular?.invalid && celular?.touched"
+                id="celular" 
+                placeholder="(00) 00000-0000"
+                formControlName="celular"
+                (input)="aplicarMascaraCelular($event)"
+                required>
+              <div class="invalid-feedback" *ngIf="celular?.invalid && celular?.touched">
+                <div *ngIf="celular?.errors?.['required']">Celular é obrigatório</div>
+              </div>
+            </div>
+
+            <div class="col-md-6 mb-3" *ngIf="isEditMode">
+              <div class="form-check mt-4">
+                <input 
+                  class="form-check-input" 
+                  type="checkbox" 
+                  id="status" 
+                  formControlName="status">
+                <label class="form-check-label" for="status">
+                  Representante Ativo
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Aba Endereço -->
+        <div class="tab-content" *ngIf="activeTab === 'endereco'">
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <label for="cep" class="form-label">CEP *</label>
+              <div class="input-group">
+                <input 
+                  type="text" 
+                  class="form-control form-control-sm" 
+                  [class.is-invalid]="cep?.invalid && cep?.touched"
+                  id="cep" 
+                  placeholder="00000-000"
+                  formControlName="cep"
+                  (input)="aplicarMascaraCep($event)"
+                  (blur)="buscarCep()"
+                  required>
+                <button 
+                  class="btn btn-outline-secondary" 
+                  type="button" 
+                  (click)="buscarCep()"
+                  [disabled]="!cep?.value || cep?.invalid">
+                  <i class="bi bi-search"></i>
+                </button>
+              </div>
+              <div class="invalid-feedback" *ngIf="cep?.invalid && cep?.touched">
+                <div *ngIf="cep?.errors?.['required']">CEP é obrigatório</div>
+                <div *ngIf="cep?.errors?.['pattern']">CEP deve ter formato 00000-000</div>
+              </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label for="endereco" class="form-label">Endereço *</label>
+              <input 
+                type="text" 
+                class="form-control form-control-sm" 
+                [class.is-invalid]="endereco?.invalid && endereco?.touched"
+                id="endereco" 
+                placeholder="Digite o endereço"
+                formControlName="endereco"
+                required>
+              <div class="invalid-feedback" *ngIf="endereco?.invalid && endereco?.touched">
+                <div *ngIf="endereco?.errors?.['required']">Endereço é obrigatório</div>
+              </div>
+            </div>
+
+            <div class="col-md-2 mb-3">
+              <label for="numero" class="form-label">Número *</label>
+              <input 
+                type="text" 
+                class="form-control form-control-sm" 
+                [class.is-invalid]="numero?.invalid && numero?.touched"
+                id="numero" 
+                placeholder="Nº"
+                formControlName="numero"
+                required>
+              <div class="invalid-feedback" *ngIf="numero?.invalid && numero?.touched">
+                <div *ngIf="numero?.errors?.['required']">Número é obrigatório</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <label for="bairro" class="form-label">Bairro *</label>
+              <input 
+                type="text" 
+                class="form-control form-control-sm" 
+                [class.is-invalid]="bairro?.invalid && bairro?.touched"
+                id="bairro" 
+                placeholder="Digite o bairro"
+                formControlName="bairro"
+                required>
+              <div class="invalid-feedback" *ngIf="bairro?.invalid && bairro?.touched">
+                <div *ngIf="bairro?.errors?.['required']">Bairro é obrigatório</div>
+              </div>
+            </div>
+
+            <div class="col-md-4 mb-3">
+              <label for="cidade" class="form-label">Cidade *</label>
+              <input 
+                type="text" 
+                class="form-control form-control-sm" 
+                [class.is-invalid]="cidade?.invalid && cidade?.touched"
+                id="cidade" 
+                placeholder="Digite a cidade"
+                formControlName="cidade"
+                required>
+              <div class="invalid-feedback" *ngIf="cidade?.invalid && cidade?.touched">
+                <div *ngIf="cidade?.errors?.['required']">Cidade é obrigatória</div>
+              </div>
+            </div>
+
+            <div class="col-md-4 mb-3">
+              <label for="uf" class="form-label">UF *</label>
+              <select 
+                class="form-select form-select-sm" 
+                [class.is-invalid]="uf?.invalid && uf?.touched"
+                id="uf" 
+                formControlName="uf"
+                required>
+                <option value="">Selecione o estado</option>
+                <option *ngFor="let estado of estados" [value]="estado">{{ estado }}</option>
+              </select>
+              <div class="invalid-feedback" *ngIf="uf?.invalid && uf?.touched">
+                <div *ngIf="uf?.errors?.['required']">UF é obrigatório</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12 mb-3">
+              <label for="complemento" class="form-label">Complemento</label>
+              <input 
+                type="text" 
+                class="form-control form-control-sm" 
+                id="complemento" 
+                placeholder="Apartamento, bloco, etc. (opcional)"
+                formControlName="complemento">
+            </div>
+          </div>
+        </div>
+
+        <!-- Aba Dados de Acesso -->
+        <div class="tab-content" *ngIf="activeTab === 'dados-acesso' && !isEditMode">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="senha" class="form-label">Senha *</label>
+              <input 
+                type="password" 
+                class="form-control form-control-sm" 
+                [class.is-invalid]="senha?.invalid && senha?.touched"
+                id="senha" 
+                placeholder="Digite a senha"
+                formControlName="senha"
+                required>
+              <div class="invalid-feedback" *ngIf="senha?.invalid && senha?.touched">
+                <div *ngIf="senha?.errors?.['required']">Senha é obrigatória</div>
+                <div *ngIf="senha?.errors?.['minlength']">Senha deve ter pelo menos 6 caracteres</div>
+              </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label for="confirmarSenha" class="form-label">Confirmar Senha *</label>
+              <input 
+                type="password" 
+                class="form-control form-control-sm" 
+                [class.is-invalid]="(confirmarSenha?.invalid && confirmarSenha?.touched) || representanteForm.errors?.['senhasDiferentes']"
+                id="confirmarSenha" 
+                placeholder="Confirme a senha"
+                formControlName="confirmarSenha"
+                required>
+              <div class="invalid-feedback" *ngIf="(confirmarSenha?.invalid && confirmarSenha?.touched) || representanteForm.errors?.['senhasDiferentes']">
+                <div *ngIf="confirmarSenha?.errors?.['required']">Confirmação de senha é obrigatória</div>
+                <div *ngIf="representanteForm.errors?.['senhasDiferentes']">As senhas devem ser iguais</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="alert alert-info" role="alert">
+            <i class="bi bi-info-circle"></i>
+            <strong>Informação:</strong> A senha será usada pelo representante para acessar o sistema.
+          </div>
+        </div>
+
+        <!-- Botões de navegação e ação -->
+        <div class="d-flex justify-content-between align-items-center mt-4">
+          <div>
+            <button 
+              type="button" 
+              class="btn btn-outline-secondary me-2" 
+              (click)="abaAnterior()"
+              [disabled]="activeTab === 'dados-pessoais' || isLoading">
+              <i class="bi bi-arrow-left"></i> Anterior
+            </button>
+            <button 
+              type="button" 
+              class="btn btn-outline-primary" 
+              (click)="proximaAba()"
+              *ngIf="(activeTab === 'dados-pessoais') || (activeTab === 'endereco' && !isEditMode)"
+              [disabled]="!isTabValid(activeTab) || isLoading">
+              Próximo <i class="bi bi-arrow-right"></i>
+            </button>
+          </div>
+
+          <div>
+            <button 
+              type="button" 
+              class="btn btn-secondary me-2" 
+              (click)="cancelar()"
+              [disabled]="isLoading">
+              Cancelar
+            </button>
+            <button 
+              type="submit" 
+              class="btn btn-primary" 
+              [disabled]="representanteForm.invalid || isLoading"
+              *ngIf="(activeTab === 'endereco' && isEditMode) || (activeTab === 'dados-acesso' && !isEditMode)">
+              <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+              {{ isEditMode ? 'Atualizar' : 'Salvar' }}
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

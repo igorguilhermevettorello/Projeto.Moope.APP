@@ -1,0 +1,35 @@
+.backoffice-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.layout-body {
+  display: flex;
+  flex: 1;
+  background: #f5f7fa;
+}
+
+app-side-menu {
+  width: 240px;
+  background: #1B1464;
+  color: #fff;
+  min-height: 100%;
+  box-shadow: 2px 0 8px rgba(0,0,0,0.04);
+}
+
+.layout-content {
+  flex: 1;
+  padding: 32px;
+  overflow-y: auto;
+}
+
+app-top-bar {
+  height: 60px;
+  background: #0470BC;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  z-index: 10;
+} 

@@ -1,0 +1,56 @@
+<!-- Barra superior -->
+<nav class="navbar navbar-expand-lg" style="background: #38B6FF; height: 50px;">
+  <div class="container-fluid h-100">
+    <a class="navbar-brand d-flex align-items-center h-100 p-0" href="#">
+      <img src="/moope.png" alt="Moope Logo" style="height: 38px;" class="me-2" />
+    </a>
+    <div class="ms-auto">
+      <a class="nav-link text-white fw-bold" routerLink="/login">Área Restrita</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Grid horizontal -->
+<div class="container-fluid" style="min-height: calc(100vh - 50px); background: #f8f9fa;">
+  <div class="row h-100 align-items-start justify-content-center" style="min-height: calc(100vh - 50px);">
+    <!-- Coluna esquerda: Hero -->
+    <div class="col-12 col-md-6 d-flex flex-column justify-content-center align-items-center text-center p-5">
+      <app-planos [plano]="plano"></app-planos>
+    </div>
+    <!-- Coluna direita: Espaço reservado para conteúdo futuro -->
+    <div class="col-12 col-md-6 d-flex flex-column justify-content-center align-items-center text-center p-5">
+      <ng-container *ngIf="planoSelecionado; else infoMoope">
+        <app-steps-pagamento [plano]="plano"></app-steps-pagamento>
+      </ng-container>
+      <ng-template #infoMoope>
+        <div class="info-moope">
+          <img src="/moope.png" alt="Moope Logo" style="height: 80px; margin-bottom: 1.5rem;" />
+          <h2 class="fw-bold mb-3">Bem-vindo à Plataforma Moope</h2>
+          <p class="lead text-secondary mb-4" style="max-width: 400px;">
+            Escolha um dos planos ao lado para começar!<br>
+            A Moope oferece soluções modernas para segurança, rastreamento e gestão de veículos.
+          </p>
+          
+          <!-- Botões de teste para o toast -->
+          <div class="toast-test-buttons mt-4">
+            <h6 class="mb-3">Teste do Sistema de Toast:</h6>
+            <div class="d-flex flex-wrap gap-2 justify-content-center">
+              <button class="btn btn-success btn-sm" (click)="testSuccessToast()">
+                Sucesso
+              </button>
+              <button class="btn btn-danger btn-sm" (click)="testErrorToast()">
+                Erro
+              </button>
+              <button class="btn btn-warning btn-sm" (click)="testWarningToast()">
+                Aviso
+              </button>
+              <button class="btn btn-info btn-sm" (click)="testInfoToast()">
+                Info
+              </button>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div> 

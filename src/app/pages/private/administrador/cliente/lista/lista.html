@@ -1,0 +1,104 @@
+<div class="container mt-3">
+  <div class="row mb-3">
+    <div class="col-sm-8 col-12 mb-2 mb-sm-0">
+      <input 
+        type="text" 
+        class="form-control form-control-sm" 
+        placeholder="Buscar por nome, email, CPF/CNPJ ou cidade" 
+        [(ngModel)]="termoBusca" 
+        (keyup.enter)="buscar()"
+        [disabled]="isLoading">
+    </div>
+    <div class="col-sm-2 col-6">
+      <button 
+        class="btn btn-primary btn-sm w-100" 
+        (click)="buscar()"
+        [disabled]="isLoading">
+        <i class="bi bi-search"></i> Buscar
+      </button>
+    </div>
+    <div class="col-sm-2 col-6">
+      <button 
+        class="btn btn-success btn-sm w-100" 
+        (click)="adicionar()"
+        [disabled]="isLoading">
+        <i class="bi bi-plus"></i> Adicionar
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading spinner -->
+  <div *ngIf="isLoading" class="text-center my-4">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Carregando...</span>
+    </div>
+    <p class="mt-2">Carregando clientes...</p>
+  </div>
+
+  <!-- Table content -->
+  <div class="table-responsive" *ngIf="!isLoading && clientesFiltrados.length > 0">
+    <table class="table table-sm align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>Nome</th>
+          <th>Email</th>
+          <th style="width: 120px;">Tipo</th>
+          <th style="width: 150px;">CPF/CNPJ</th>
+          <th style="width: 130px;">Celular</th>
+          <th>Cidade</th>
+          <th style="width: 100px;">Status</th>
+          <th style="width: 280px;">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let cliente of clientesFiltrados">
+          <td>{{ cliente.nome }}</td>
+          <td>{{ cliente.email }}</td>
+          <td>
+            <span class="badge" [ngClass]="cliente.tipoPessoa === 'PF' ? 'bg-info' : 'bg-warning'">
+              {{ formatarTipoPessoa(cliente.tipoPessoa) }}
+            </span>
+          </td>
+          <td>{{ formatarCpfCnpj(cliente.cpfCnpj) }}</td>
+          <td>{{ formatarCelular(cliente.celular) }}</td>
+          <td>{{ cliente.cidade }}/{{ cliente.uf }}</td>
+          <td>
+            <span class="badge" [ngClass]="cliente.status ? 'bg-success' : 'bg-danger'">
+              {{ cliente.status ? 'Ativo' : 'Inativo' }}
+            </span>
+          </td>
+          <td>
+            <div class="d-flex gap-1">
+              <button 
+                class="btn btn-outline-primary btn-sm" 
+                (click)="editar(cliente)"
+                [disabled]="isLoading">
+                <i class="bi bi-pencil"></i> Editar
+              </button>
+              <button 
+                class="btn btn-outline-warning btn-sm" 
+                (click)="alternarStatus(cliente)"
+                [disabled]="isLoading">
+                <i class="bi bi-toggle-on" *ngIf="cliente.status"></i>
+                <i class="bi bi-toggle-off" *ngIf="!cliente.status"></i>
+                {{ cliente.status ? 'Inativar' : 'Ativar' }}
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Empty state -->
+  <div *ngIf="!isLoading && clientesFiltrados.length === 0" class="text-center my-5">
+    <div class="empty-state">
+      <i class="bi bi-people display-1 text-muted mb-3"></i>
+      <h5 class="text-muted mb-2">Não há registros</h5>
+       <p class="text-muted mb-3">
+        <span *ngIf="termoBusca">Nenhum cliente encontrado para "{{ termoBusca }}".</span>
+        <span *ngIf="!termoBusca">Nenhum cliente cadastrado no sistema.</span>
+      </p>
+    </div>
+  </div>
+</div>

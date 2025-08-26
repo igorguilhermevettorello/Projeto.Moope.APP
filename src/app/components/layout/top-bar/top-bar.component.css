@@ -1,0 +1,31 @@
+.top-bar {
+  height: 60px;
+  background: #38B6FF;
+  color: #fff;
+  padding: 0 20px;
+  display: flex;
+  width: 100%;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.top-bar img {
+  height: 40px;
+}
+
+.user-name {
+  font-weight: 500;
+  font-size: 1.1rem;
+  color: #fff;
+}
+
+.settings-btn {
+  color: #fff;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.settings-btn:focus {
+  outline: none;
+  box-shadow: none;
+} 

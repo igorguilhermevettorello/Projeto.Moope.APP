@@ -1,0 +1,55 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+  <div class="mb-3">
+    <label for="nome" class="form-label">Nome</label>
+    <input type="text" class="form-control form-control-sm" id="nome" formControlName="nome" placeholder="Digite seu nome" [ngClass]="{'is-invalid': form.get('nome')?.invalid && form.get('nome')?.touched}" />
+    <div class="invalid-feedback" *ngIf="form.get('nome')?.errors && form.get('nome')?.touched">
+      <ng-container *ngIf="form.get('nome')?.errors?.['required']">Nome é obrigatório.</ng-container>
+      <ng-container *ngIf="form.get('nome')?.errors?.['minlength']">Nome deve ter pelo menos 2 caracteres.</ng-container>
+      <ng-container *ngIf="form.get('nome')?.errors?.['maxlength']">Nome deve ter no máximo 100 caracteres.</ng-container>
+      <ng-container *ngIf="form.get('nome')?.errors?.['pattern']">Nome não pode conter caracteres especiais.</ng-container>
+    </div>
+  </div>
+  <div class="mb-3">
+    <label for="email" class="form-label">Email</label>
+    <input type="email" class="form-control form-control-sm" id="email" formControlName="email" placeholder="Digite seu email" [ngClass]="{'is-invalid': form.get('email')?.invalid && form.get('email')?.touched}" />
+    <div class="invalid-feedback" *ngIf="form.get('email')?.invalid && form.get('email')?.touched">
+      Email válido é obrigatório.
+    </div>
+  </div>
+  <div class="mb-3">
+    <label for="documento" class="form-label">CPF ou CNPJ</label>
+    <input 
+      type="text" 
+      class="form-control form-control-sm" 
+      id="documento" 
+      formControlName="documento" 
+      placeholder="Digite seu CPF ou CNPJ"
+      maxlength="14" 
+      [ngClass]="{'is-invalid': form.get('documento')?.invalid && form.get('documento')?.touched}" 
+      (input)="verificarNumeros($event)"
+    />
+    <div class="invalid-feedback" *ngIf="form.get('documento')?.invalid && form.get('documento')?.touched">
+      <ng-container *ngIf="form.get('documento')?.errors?.['required']">CPF ou CNPJ é obrigatório.</ng-container>
+      <ng-container *ngIf="form.get('documento')?.errors?.['documentoInvalido']">{{ form.get('documento')?.errors?.['documentoInvalido'] }}</ng-container>
+      <ng-container *ngIf="form.get('documento')?.errors?.['cpfInvalido']">{{ form.get('documento')?.errors?.['cpfInvalido'] }}</ng-container>
+      <ng-container *ngIf="form.get('documento')?.errors?.['cnpjInvalido']">{{ form.get('documento')?.errors?.['cnpjInvalido'] }}</ng-container>
+    </div>
+  </div>
+  <div class="mb-3">
+    <label for="telefone" class="form-label">Telefone</label>
+    <input 
+      type="text" 
+      class="form-control form-control-sm" 
+      id="telefone" 
+      formControlName="telefone" 
+      placeholder="Digite seu telefone" 
+      [ngClass]="{'is-invalid': form.get('telefone')?.invalid && form.get('telefone')?.touched}" 
+      (input)="aplicarMascaraTelefone($event)" 
+      maxlength="15"
+    />
+    <div class="invalid-feedback" *ngIf="form.get('telefone')?.invalid && form.get('telefone')?.touched">
+      Telefone é obrigatório.
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary w-100">Próximo</button>
+</form> 

@@ -1,0 +1,23 @@
+.steps-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  margin: 2rem 0;
+}
+
+.step {
+  padding: 0.75rem 1.5rem;
+  border-radius: 2rem;
+  background: #e9ecef;
+  color: #6c757d;
+  font-weight: 500;
+  font-size: 1.1rem;
+  transition: background 0.3s, color 0.3s;
+}
+
+.step.active {
+  background: #38B6FF;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(56,182,255,0.15);
+} 

@@ -1,0 +1,28 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+  <div class="mb-3">
+    <label for="produto" class="form-label">Produto</label>
+    <input type="text" class="form-control form-control-sm" id="produto" formControlName="produto" placeholder="Digite o produto" [ngClass]="{'is-invalid': form.get('produto')?.invalid && form.get('produto')?.touched}" />
+    <div class="invalid-feedback" *ngIf="form.get('produto')?.invalid && form.get('produto')?.touched">
+      Produto é obrigatório.
+    </div>
+  </div>
+  <div class="mb-3">
+    <label for="quantidade" class="form-label">Quantidade</label>
+    <input type="number" class="form-control form-control-sm" id="quantidade" formControlName="quantidade" min="1" placeholder="Digite a quantidade" [ngClass]="{'is-invalid': form.get('quantidade')?.invalid && form.get('quantidade')?.touched}" />
+    <div class="invalid-feedback" *ngIf="form.get('quantidade')?.invalid && form.get('quantidade')?.touched">
+      Quantidade deve ser maior que 0.
+    </div>
+  </div>
+  <div class="mb-3">
+    <label for="valor" class="form-label">Valor</label>
+    <input type="number" class="form-control form-control-sm" id="valor" formControlName="valor" min="0.01" step="0.01" placeholder="Digite o valor" [ngClass]="{'is-invalid': form.get('valor')?.invalid && form.get('valor')?.touched}" />
+    <div class="invalid-feedback" *ngIf="form.get('valor')?.invalid && form.get('valor')?.touched">
+      Valor deve ser maior que 0.
+    </div>
+  </div>
+  <div class="mb-3">
+    <label for="total" class="form-label">Total</label>
+    <input type="text" class="form-control form-control-sm" id="total" formControlName="total" [ariaDisabled]="true" />
+  </div>
+  <button type="submit" class="btn btn-primary w-100">Próximo</button>
+</form> 

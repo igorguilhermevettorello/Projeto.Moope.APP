@@ -1,0 +1,162 @@
+.planos-container {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 0 1rem 0;
+}
+.titulo {
+  text-align: center;
+  font-size: 2.2rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  letter-spacing: 1px;
+}
+.subtitulo {
+  text-align: center;
+  color: #444;
+  margin-bottom: 2rem;
+}
+.planos-grid {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.plano-card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 16px #0001;
+  /* padding: 1.5rem 1.2rem 2rem 1.2rem; */
+  width: 320px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.plano-card-padding {
+  padding: 1.5rem 1.2rem 0rem 1.2rem;
+}
+.plano-card.premium {
+  border: 2px solid #6c63ff;
+}
+.plano-header {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 1.2rem;
+}
+.plano-nome {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #222;
+}
+.badge-vendido {
+  background: #ff4d2d;
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: bold;
+  padding: 0.2rem 0.7rem;
+  border-radius: 2px;
+  position: absolute;
+  right: 18px;
+  top: 10px;
+  z-index: 2;
+}
+.plano-preco-area {
+  width: 100%;
+  background: #273c75;
+  color: #fff;
+  border-radius: 4px;
+  padding: 1.1rem 0 0.7rem 0;
+  text-align: center;
+  margin-bottom: 1.2rem;
+  position: relative;
+}
+.plano-preco-area.premium {
+  background: #6c63ff;
+}
+.plano-preco {
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+.preco-grande {
+  font-size: 2.5rem;
+  font-weight: bold;
+}
+.preco-centavos {
+  font-size: 1.1rem;
+  vertical-align: super;
+}
+.plano-mes {
+  display: block;
+  font-size: 1rem;
+  margin-top: 0.2rem;
+}
+.plano-beneficios {
+  list-style: none;
+  padding: 1.5rem 1.2rem 0rem 1.2rem;
+  margin: 1.2rem 0 1.5rem 0;
+  color: #444;
+  font-size: 1rem;
+}
+.plano-beneficios li {
+  margin-bottom: 15px;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  text-align: justify;
+}
+.btn-comprar {
+  background: #38B6FF;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 0.7rem 1.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  box-shadow: 0 2px 8px #38B6FF22;
+  margin-bottom: 1.2rem;
+}
+.btn-comprar:hover, .btn-comprar:focus {
+  background: #2596d4;
+}
+.planos-obs {
+  margin-top: 2rem;
+  text-align: center;
+  color: #444;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+.obs-icon {
+  color: #273c75;
+  font-size: 1.2rem;
+}
+.beneficio-hr {
+  border: none;
+  border-top: 1px solid #e0e0e0;
+  margin: 10px 0;
+}
+.li-icon {
+  color: #38B6FF;
+  font-size: 1.1em;
+  margin-right: 8px;
+  flex-shrink: 0;
+  display: inline-block;
+  vertical-align: middle;
+}
+@media (max-width: 900px) {
+  .planos-grid {
+    flex-direction: column;
+    align-items: center;
+  }
+  .plano-card {
+    width: 95%;
+    max-width: 400px;
+  }
+} 
