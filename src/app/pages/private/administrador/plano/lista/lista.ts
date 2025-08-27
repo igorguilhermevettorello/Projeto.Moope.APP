@@ -3,7 +3,7 @@ import { Plano } from '../plano.interface';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { PlanoService } from '../plano.service';
+import { PlanoService } from '../../../../../services/plano/plano.service';
 import { ToastService } from '../../../../../shared/toast/toast.service';
 import { finalize } from 'rxjs/operators';
 import { formatarParaMoedaBrasileira } from '../../../../../shared/utils/mask.money.util';

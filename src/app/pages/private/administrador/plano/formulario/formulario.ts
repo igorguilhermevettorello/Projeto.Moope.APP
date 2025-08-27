@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Plano } from '../plano.interface';
-import { PlanoService } from '../plano.service';
+import { PlanoService } from '../../../../../services/plano/plano.service';
 import { ToastService } from '../../../../../shared/toast/toast.service';
 import { maskMoney, moneyToFloat, formatarParaMoedaBrasileira } from '../../../../../shared/utils/mask.money.util';
 import { maskCpf } from '../../../../../shared/utils/cpf.utils';

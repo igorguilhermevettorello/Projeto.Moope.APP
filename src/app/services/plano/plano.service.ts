@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
-import { environment } from '../../../../../environments/environment';
-import { Plano } from './plano.interface';
+import { environment } from '../../../environments/environment';
+import { Plano } from '../../pages/private/administrador/plano/plano.interface';
 
 @Injectable({
   providedIn: 'root'
