@@ -115,7 +115,6 @@ export class Login implements OnInit {
 
     this.auth.login(loginRequest).subscribe({
       next: (result) => {
-        debugger;
         this.loading = false;
         // Salva o usuário logado
         this.auth.saveUsuarioLogado(result as UsuarioLogado);

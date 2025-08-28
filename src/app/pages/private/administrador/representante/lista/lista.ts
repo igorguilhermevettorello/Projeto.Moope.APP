@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef, inject } from '@angular/core';
-import { Representante } from '../../../../../core/interfaces/representante.interface';
+import { ListaRepresentante, Representante } from '../../../../../core/interfaces/representante.interface';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -15,8 +15,8 @@ import { finalize } from 'rxjs/operators';
   styleUrl: './lista.css'
 })
 export class Lista implements OnInit {
-  representantes: Representante[] = [];
-  representantesFiltrados: Representante[] = [];
+  representantes: ListaRepresentante[] = [];
+  representantesFiltrados: ListaRepresentante[] = [];
   termoBusca: string = '';
   isLoading: boolean = false;
 
@@ -73,15 +73,15 @@ export class Lista implements OnInit {
     this.router.navigate(['/administrador/representantes/add']);
   }
 
-  editar(representante: Representante) {
+  editar(representante: ListaRepresentante) {
     this.router.navigate(['/administrador/representantes/edit', representante.id]);
   }
 
-  alternarStatus(representante: Representante) {
+  alternarStatus(representante: ListaRepresentante) {
     this.setLoading(true);
     
     // Determina qual serviço chamar baseado no status atual
-    const servicoAtualizar = representante.status 
+    const servicoAtualizar = representante.ativo 
       ? this.representanteService.inativarRepresentante(representante.id)
       : this.representanteService.ativarRepresentante(representante.id);
     
@@ -92,20 +92,20 @@ export class Lista implements OnInit {
     ).subscribe({
       next: (representanteAtualizado) => {
         this.carregarRepresentantes();
-        const acao = representante.status ? 'inativado' : 'ativado';
+        const acao = representante.ativo ? 'inativado' : 'ativado';
         this.toastService.showSuccess(`Representante "${representante.nome}" ${acao} com sucesso!`);
       },
       error: (error) => {
         console.error('Erro ao alternar status do representante:', error);
-        const acao = representante.status ? 'inativar' : 'ativar';
+        const acao = representante.ativo ? 'inativar' : 'ativar';
         const mensagem = typeof error === 'string' ? error : `Erro ao ${acao} o representante. Tente novamente.`;
         this.toastService.showError(mensagem);
       }
     });
   }
 
-  formatarTipoPessoa(tipoPessoa: string): string {
-    return tipoPessoa === 'PF' ? 'Pessoa Física' : 'Pessoa Jurídica';
+  formatarTipoPessoa(tipoPessoa: number): string {
+    return tipoPessoa === 1 ? 'Pessoa Física' : 'Pessoa Jurídica';
   }
 
   formatarCpfCnpj(cpfCnpj: string): string {

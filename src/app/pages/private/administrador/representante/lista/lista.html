@@ -55,16 +55,16 @@
           <td>{{ representante.nome }}</td>
           <td>{{ representante.email }}</td>
           <td>
-            <span class="badge" [ngClass]="representante.tipoPessoa === 'PF' ? 'bg-info' : 'bg-warning'">
+            <span class="badge" [ngClass]="representante.tipoPessoa === 1 ? 'bg-info' : 'bg-warning'">
               {{ formatarTipoPessoa(representante.tipoPessoa) }}
             </span>
           </td>
           <td>{{ formatarCpfCnpj(representante.cpfCnpj) }}</td>
-          <td>{{ formatarCelular(representante.celular) }}</td>
-          <td>{{ representante.cidade }}/{{ representante.uf }}</td>
+          <td>{{ formatarCelular(representante.telefone) }}</td>
+          <td>{{ representante.cidade }}/{{ representante.estado }}</td>
           <td>
-            <span class="badge" [ngClass]="representante.status ? 'bg-success' : 'bg-danger'">
-              {{ representante.status ? 'Ativo' : 'Inativo' }}
+            <span class="badge" [ngClass]="representante.ativo ? 'bg-success' : 'bg-danger'">
+              {{ representante.ativo ? 'Ativo' : 'Inativo' }}
             </span>
           </td>
           <td>
@@ -79,9 +79,9 @@
                 class="btn btn-outline-warning btn-sm" 
                 (click)="alternarStatus(representante)"
                 [disabled]="isLoading">
-                <i class="bi bi-toggle-on" *ngIf="representante.status"></i>
-                <i class="bi bi-toggle-off" *ngIf="!representante.status"></i>
-                {{ representante.status ? 'Inativar' : 'Ativar' }}
+                <i class="bi bi-toggle-on" *ngIf="representante.ativo"></i>
+                <i class="bi bi-toggle-off" *ngIf="!representante.ativo"></i>
+                {{ representante.ativo ? 'Inativar' : 'Ativar' }}
               </button>
             </div>
           </td>

@@ -123,10 +123,6 @@ export class ClienteService {
       return 'Erro de conexão. Verifique sua internet e tente novamente.';
     }
     
-    if (error.status === 401) {
-      return 'Sessão expirada. Faça login novamente.';
-    }
-    
     if (error.status === 403) {
       return 'Acesso negado. Você não tem permissão para esta ação.';
     }

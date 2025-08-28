@@ -3,7 +3,7 @@ export interface Cliente {
   // Dados Pessoais
   nome: string;
   email: string;
-  tipoPessoa: 'PF' | 'PJ';
+  tipoPessoa: number;
   cpfCnpj: string;
   celular: string;
   

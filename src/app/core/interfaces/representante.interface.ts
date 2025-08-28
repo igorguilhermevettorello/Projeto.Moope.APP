@@ -3,45 +3,84 @@ export interface Representante {
   // Dados Pessoais
   nome: string;
   email: string;
-  tipoPessoa: 'PF' | 'PJ';
+  tipoPessoa: number;
   cpfCnpj: string;
-  celular: string;
+  telefone: string;
+  ativo: boolean;
   
   // Endereço
+  endereco: {
+    cep: string;
+    logradouro: string;
+    numero: string;
+    complemento?: string;
+    bairro: string;
+    cidade: string;
+    estado: string;
+  };
+  
+  // Dados da Conta
+  nomeFantasia?: string;
+  inscricaoEstadual?: string;
+  percentualComissao: number;
+  chavePix: string;
+  status: boolean;
+}
+
+export interface RepresentanteDetalhado {
+  id: string;
+  // Dados Pessoais
+  nome: string;
+  email: string;
+  tipoPessoa: number;
+  cpfCnpj: string;
+  telefone: string;
+  ativo: boolean;
+  
   cep: string;
-  endereco: string;
+  logradouro: string;
   numero: string;
+  complemento?: string;
   bairro: string;
   cidade: string;
-  uf: string;
-  complemento?: string;
-  
-  // Dados de Acesso
-  senha: string;
-  
-  // Status
-  status: boolean;
+  estado: string;
+
+  // Dados da Conta
+  nomeFantasia?: string;
+  inscricaoEstadual?: string;
+  percentualComissao: number;
+  chavePix: string;
 }
 
 export interface CreateRepresentanteRequest {
   // Dados Pessoais
   nome: string;
   email: string;
-  tipoPessoa: 'PF' | 'PJ';
   cpfCnpj: string;
-  celular: string;
+  telefone: string;
+  tipoPessoa: number;
+  ativo: boolean;
   
   // Endereço
-  cep: string;
-  endereco: string;
-  numero: string;
-  bairro: string;
-  cidade: string;
-  uf: string;
-  complemento?: string;
+  endereco: {
+    cep: string;
+    logradouro: string;
+    numero: string;
+    complemento?: string;
+    bairro: string;
+    cidade: string;
+    estado: string;
+  };
   
   // Dados de Acesso
   senha: string;
+  confirmacao: string;
+  
+  // Dados da Conta
+  nomeFantasia?: string;
+  inscricaoEstadual?: string;
+  percentualComissao: number;
+  chavePix: string;
 }
 
 export interface UpdateRepresentanteRequest {
@@ -49,19 +88,37 @@ export interface UpdateRepresentanteRequest {
   // Dados Pessoais
   nome: string;
   email: string;
-  tipoPessoa: 'PF' | 'PJ';
   cpfCnpj: string;
-  celular: string;
+  telefone: string;
+  tipoPessoa: number;
+  ativo: boolean;
   
   // Endereço
-  cep: string;
-  endereco: string;
-  numero: string;
-  bairro: string;
-  cidade: string;
-  uf: string;
-  complemento?: string;
+  endereco: {
+    cep: string;
+    logradouro: string;
+    numero: string;
+    complemento?: string;
+    bairro: string;
+    cidade: string;
+    estado: string;
+  };
   
-  // Status
-  status: boolean;
+  // Dados da Conta
+  nomeFantasia?: string;
+  inscricaoEstadual?: string;
+  percentualComissao: number;
+  chavePix: string;
+}
+
+export interface ListaRepresentante {
+  id: string;
+  nome: string;
+  email: string;
+  tipoPessoa: number;
+  cpfCnpj: string;
+  telefone: string;
+  cidade: string;
+  estado: string;
+  ativo: boolean;
 }

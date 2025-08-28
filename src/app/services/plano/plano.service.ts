@@ -43,7 +43,7 @@ export class PlanoService {
   }
 
   atualizarPlano(plano: Plano): Observable<Plano> {
-    return this.http.put<Plano>(`${this.baseUrl}/${plano.codigo}`, plano).pipe(
+    return this.http.put<Plano>(`${this.baseUrl}/${plano.id}`, plano).pipe(
       catchError((error: HttpErrorResponse) => {
         console.error(`Erro ao atualizar plano com código ${plano.codigo}:`, error);
         const mensagem = this.obterMensagemErro(error, 'Erro ao atualizar plano');

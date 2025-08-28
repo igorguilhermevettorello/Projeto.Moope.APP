@@ -29,6 +29,18 @@
             <i class="bi bi-check-circle-fill text-success ms-1" *ngIf="isTabValid('endereco') && activeTab !== 'endereco'"></i>
           </button>
         </li>
+        <li class="nav-item" role="presentation">
+          <button 
+            class="nav-link" 
+            [class.active]="activeTab === 'dados-conta'"
+            [class.text-success]="isTabValid('dados-conta') && activeTab !== 'dados-conta'"
+            type="button" 
+            (click)="setActiveTab('dados-conta')">
+            <i class="bi bi-credit-card"></i>
+            Dados da Conta
+            <i class="bi bi-check-circle-fill text-success ms-1" *ngIf="isTabValid('dados-conta') && activeTab !== 'dados-conta'"></i>
+          </button>
+        </li>
         <li class="nav-item" role="presentation" *ngIf="!isEditMode">
           <button 
             class="nav-link" 
@@ -123,18 +135,18 @@
 
           <div class="row">
             <div class="col-md-6 mb-3">
-              <label for="celular" class="form-label">Celular *</label>
+              <label for="telefone" class="form-label">Telefone *</label>
               <input 
                 type="text" 
                 class="form-control form-control-sm" 
-                [class.is-invalid]="celular?.invalid && celular?.touched"
-                id="celular" 
+                [class.is-invalid]="telefone?.invalid && telefone?.touched"
+                id="telefone" 
                 placeholder="(00) 00000-0000"
-                formControlName="celular"
-                (input)="aplicarMascaraCelular($event)"
+                formControlName="telefone"
+                (input)="aplicarMascaraTelefone($event)"
                 required>
-              <div class="invalid-feedback" *ngIf="celular?.invalid && celular?.touched">
-                <div *ngIf="celular?.errors?.['required']">Celular é obrigatório</div>
+              <div class="invalid-feedback" *ngIf="telefone?.invalid && telefone?.touched">
+                <div *ngIf="telefone?.errors?.['required']">Telefone é obrigatório</div>
               </div>
             </div>
 
@@ -143,9 +155,9 @@
                 <input 
                   class="form-check-input" 
                   type="checkbox" 
-                  id="status" 
-                  formControlName="status">
-                <label class="form-check-label" for="status">
+                  id="ativo" 
+                  formControlName="ativo">
+                <label class="form-check-label" for="ativo">
                   Representante Ativo
                 </label>
               </div>
@@ -184,17 +196,17 @@
             </div>
 
             <div class="col-md-6 mb-3">
-              <label for="endereco" class="form-label">Endereço *</label>
+              <label for="logradouro" class="form-label">Logradouro *</label>
               <input 
                 type="text" 
                 class="form-control form-control-sm" 
-                [class.is-invalid]="endereco?.invalid && endereco?.touched"
-                id="endereco" 
-                placeholder="Digite o endereço"
-                formControlName="endereco"
+                [class.is-invalid]="logradouro?.invalid && logradouro?.touched"
+                id="logradouro" 
+                placeholder="Digite o logradouro"
+                formControlName="logradouro"
                 required>
-              <div class="invalid-feedback" *ngIf="endereco?.invalid && endereco?.touched">
-                <div *ngIf="endereco?.errors?.['required']">Endereço é obrigatório</div>
+              <div class="invalid-feedback" *ngIf="logradouro?.invalid && logradouro?.touched">
+                <div *ngIf="logradouro?.errors?.['required']">Logradouro é obrigatório</div>
               </div>
             </div>
 
@@ -246,18 +258,18 @@
             </div>
 
             <div class="col-md-4 mb-3">
-              <label for="uf" class="form-label">UF *</label>
+              <label for="estado" class="form-label">Estado *</label>
               <select 
                 class="form-select form-select-sm" 
-                [class.is-invalid]="uf?.invalid && uf?.touched"
-                id="uf" 
-                formControlName="uf"
+                [class.is-invalid]="estado?.invalid && estado?.touched"
+                id="estado" 
+                formControlName="estado"
                 required>
                 <option value="">Selecione o estado</option>
                 <option *ngFor="let estado of estados" [value]="estado">{{ estado }}</option>
               </select>
-              <div class="invalid-feedback" *ngIf="uf?.invalid && uf?.touched">
-                <div *ngIf="uf?.errors?.['required']">UF é obrigatório</div>
+              <div class="invalid-feedback" *ngIf="estado?.invalid && estado?.touched">
+                <div *ngIf="estado?.errors?.['required']">Estado é obrigatório</div>
               </div>
             </div>
           </div>
@@ -272,6 +284,73 @@
                 placeholder="Apartamento, bloco, etc. (opcional)"
                 formControlName="complemento">
             </div>
+          </div>
+        </div>
+
+        <!-- Aba Dados da Conta -->
+        <div class="tab-content" *ngIf="activeTab === 'dados-conta'">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="chavePix" class="form-label">Chave PIX *</label>
+              <input 
+                type="text" 
+                class="form-control form-control-sm" 
+                [class.is-invalid]="chavePix?.invalid && chavePix?.touched"
+                id="chavePix" 
+                placeholder="Digite a chave PIX"
+                formControlName="chavePix"
+                required>
+              <div class="invalid-feedback" *ngIf="chavePix?.invalid && chavePix?.touched">
+                <div *ngIf="chavePix?.errors?.['required']">Chave PIX é obrigatória</div>
+              </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label for="percentualComissao" class="form-label">Percentual de Comissão (%) *</label>
+              <input 
+                type="number" 
+                class="form-control form-control-sm" 
+                [class.is-invalid]="percentualComissao?.invalid && percentualComissao?.touched"
+                id="percentualComissao" 
+                placeholder="0.00"
+                formControlName="percentualComissao"
+                min="0"
+                max="100"
+                step="0.01"
+                required>
+              <div class="invalid-feedback" *ngIf="percentualComissao?.invalid && percentualComissao?.touched">
+                <div *ngIf="percentualComissao?.errors?.['required']">Percentual de comissão é obrigatório</div>
+                <div *ngIf="percentualComissao?.errors?.['min']">Percentual deve ser maior ou igual a 0</div>
+                <div *ngIf="percentualComissao?.errors?.['max']">Percentual deve ser menor ou igual a 100</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row" *ngIf="tipoPessoa?.value === '2'">
+            <div class="col-md-6 mb-3">
+              <label for="nomeFantasia" class="form-label">Nome Fantasia</label>
+              <input 
+                type="text" 
+                class="form-control form-control-sm" 
+                id="nomeFantasia" 
+                placeholder="Digite o nome fantasia (opcional)"
+                formControlName="nomeFantasia">
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label for="inscricaoEstadual" class="form-label">Inscrição Estadual</label>
+              <input 
+                type="text" 
+                class="form-control form-control-sm" 
+                id="inscricaoEstadual" 
+                placeholder="Digite a inscrição estadual (opcional)"
+                formControlName="inscricaoEstadual">
+            </div>
+          </div>
+
+          <div class="alert alert-info" role="alert">
+            <i class="bi bi-info-circle"></i>
+            <strong>Informação:</strong> A chave PIX será usada para pagamentos de comissões. O percentual de comissão define quanto o representante receberá sobre as vendas realizadas.
           </div>
         </div>
 
@@ -295,17 +374,17 @@
             </div>
 
             <div class="col-md-6 mb-3">
-              <label for="confirmarSenha" class="form-label">Confirmar Senha *</label>
+              <label for="confirmacao" class="form-label">Confirmar Senha *</label>
               <input 
                 type="password" 
                 class="form-control form-control-sm" 
-                [class.is-invalid]="(confirmarSenha?.invalid && confirmarSenha?.touched) || representanteForm.errors?.['senhasDiferentes']"
-                id="confirmarSenha" 
+                [class.is-invalid]="(confirmacao?.invalid && confirmacao?.touched) || representanteForm.errors?.['senhasDiferentes']"
+                id="confirmacao" 
                 placeholder="Confirme a senha"
-                formControlName="confirmarSenha"
+                formControlName="confirmacao"
                 required>
-              <div class="invalid-feedback" *ngIf="(confirmarSenha?.invalid && confirmarSenha?.touched) || representanteForm.errors?.['senhasDiferentes']">
-                <div *ngIf="confirmarSenha?.errors?.['required']">Confirmação de senha é obrigatória</div>
+              <div class="invalid-feedback" *ngIf="(confirmacao?.invalid && confirmacao?.touched) || representanteForm.errors?.['senhasDiferentes']">
+                <div *ngIf="confirmacao?.errors?.['required']">Confirmação de senha é obrigatória</div>
                 <div *ngIf="representanteForm.errors?.['senhasDiferentes']">As senhas devem ser iguais</div>
               </div>
             </div>
@@ -331,7 +410,7 @@
               type="button" 
               class="btn btn-outline-primary" 
               (click)="proximaAba()"
-              *ngIf="(activeTab === 'dados-pessoais') || (activeTab === 'endereco' && !isEditMode)"
+              *ngIf="(activeTab === 'dados-pessoais') || (activeTab === 'endereco') || (activeTab === 'dados-conta' && !isEditMode)"
               [disabled]="!isTabValid(activeTab) || isLoading">
               Próximo <i class="bi bi-arrow-right"></i>
             </button>
@@ -349,7 +428,7 @@
               type="submit" 
               class="btn btn-primary" 
               [disabled]="representanteForm.invalid || isLoading"
-              *ngIf="(activeTab === 'endereco' && isEditMode) || (activeTab === 'dados-acesso' && !isEditMode)">
+              *ngIf="(activeTab === 'dados-conta' && isEditMode) || (activeTab === 'dados-acesso' && !isEditMode)">
               <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
               {{ isEditMode ? 'Atualizar' : 'Salvar' }}
             </button>

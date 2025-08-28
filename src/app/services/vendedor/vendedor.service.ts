@@ -2,19 +2,19 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { Representante, CreateRepresentanteRequest, UpdateRepresentanteRequest, ListaRepresentante, RepresentanteDetalhado } from '../../core/interfaces/representante.interface';
+import { Representante, CreateRepresentanteRequest, UpdateRepresentanteRequest } from '../../core/interfaces/representante.interface';
 import { TipoPessoa } from '../../core/interfaces/tipo-pessoa.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RepresentanteService {
-  private readonly baseUrl = `${environment.apiBaseUrl}/api/vendedor`;
+  private readonly baseUrl = `${environment.apiBaseUrl}/api/representante`;
 
   constructor(private http: HttpClient) { }
 
-  getRepresentantes(): Observable<ListaRepresentante[]> {
-    return this.http.get<ListaRepresentante[]>(this.baseUrl).pipe(
+  getRepresentantes(): Observable<Representante[]> {
+    return this.http.get<Representante[]>(this.baseUrl).pipe(
       catchError((error: HttpErrorResponse) => {
         console.error('Erro ao buscar representantes:', error);
         const mensagem = this.obterMensagemErro(error, 'Erro ao carregar lista de representantes');
@@ -23,8 +23,8 @@ export class RepresentanteService {
     );
   }
 
-  getRepresentanteById(id: string): Observable<RepresentanteDetalhado> {
-    return this.http.get<RepresentanteDetalhado>(`${this.baseUrl}/${id}`).pipe(
+  getRepresentanteById(id: string): Observable<Representante> {
+    return this.http.get<Representante>(`${this.baseUrl}/${id}`).pipe(
       catchError((error: HttpErrorResponse) => {
         console.error(`Erro ao buscar representante com ID ${id}:`, error);
         const mensagem = this.obterMensagemErro(error, 'Erro ao buscar representante');

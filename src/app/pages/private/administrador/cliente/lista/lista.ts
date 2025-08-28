@@ -104,8 +104,8 @@ export class Lista implements OnInit {
     });
   }
 
-  formatarTipoPessoa(tipoPessoa: string): string {
-    return tipoPessoa === 'PF' ? 'Pessoa Física' : 'Pessoa Jurídica';
+  formatarTipoPessoa(tipoPessoa: number): string {
+    return tipoPessoa === 1 ? 'Pessoa Física' : 'Pessoa Jurídica';
   }
 
   formatarCpfCnpj(cpfCnpj: string): string {

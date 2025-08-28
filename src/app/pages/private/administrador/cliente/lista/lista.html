@@ -55,7 +55,7 @@
           <td>{{ cliente.nome }}</td>
           <td>{{ cliente.email }}</td>
           <td>
-            <span class="badge" [ngClass]="cliente.tipoPessoa === 'PF' ? 'bg-info' : 'bg-warning'">
+            <span class="badge" [ngClass]="cliente.tipoPessoa === 1 ? 'bg-info' : 'bg-warning'">
               {{ formatarTipoPessoa(cliente.tipoPessoa) }}
             </span>
           </td>

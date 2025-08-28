@@ -48,23 +48,27 @@ export class Formulario implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       tipoPessoa: ['', [Validators.required]],
       cpfCnpj: ['', [Validators.required]],
-      celular: ['', [Validators.required]],
+      telefone: ['', [Validators.required]],
+      ativo: [true],
       
       // Endereço
       cep: ['', [Validators.required, Validators.pattern(/^\d{5}-?\d{3}$/)]],
-      endereco: ['', [Validators.required]],
+      logradouro: ['', [Validators.required]],
       numero: ['', [Validators.required]],
       bairro: ['', [Validators.required]],
       cidade: ['', [Validators.required]],
-      uf: ['', [Validators.required]],
+      estado: ['', [Validators.required]],
       complemento: [''],
+      
+      // Dados da Conta
+      chavePix: ['', [Validators.required]],
+      percentualComissao: [0, [Validators.required, Validators.min(0), Validators.max(100)]],
+      nomeFantasia: [''],
+      inscricaoEstadual: [''],
       
       // Dados de Acesso (apenas na criação)
       senha: ['', this.isEditMode ? [] : [Validators.required, Validators.minLength(6)]],
-      confirmarSenha: [''],
-      
-      // Status
-      status: [true]
+      confirmacao: [''],
     });
 
     // Adiciona validador de confirmação de senha
@@ -153,15 +157,25 @@ export class Formulario implements OnInit {
           email: representante.email,
           tipoPessoa: representante.tipoPessoa,
           cpfCnpj: representante.cpfCnpj,
-          celular: representante.celular,
+          telefone: representante.telefone,
+          ativo: representante.ativo,
           cep: representante.cep,
-          endereco: representante.endereco,
+          logradouro: representante.logradouro,
           numero: representante.numero,
           bairro: representante.bairro,
           cidade: representante.cidade,
-          uf: representante.uf,
+          estado: representante.estado,
           complemento: representante.complemento,
-          status: representante.status
+          // logradouro: representante.endereco.logradouro,
+          // numero: representante.endereco.numero,
+          // bairro: representante.endereco.bairro,
+          // cidade: representante.endereco.cidade,
+          // estado: representante.endereco.estado,
+          // complemento: representante.endereco.complemento,
+          chavePix: representante.chavePix,
+          percentualComissao: representante.percentualComissao,
+          nomeFantasia: representante.nomeFantasia,
+          inscricaoEstadual: representante.inscricaoEstadual
         });
         this.isLoading = false;
         this.setFormDisabledState(false);
@@ -213,7 +227,10 @@ export class Formulario implements OnInit {
     return (control: any) => {
       const cnpj = control.value?.replace(/\D/g, '');
       const rs = validatorCnpj(cnpj);
-      return { cnpjInvalido: rs }
+      if (!rs) {
+        return { cnpjInvalido: rs }
+      }
+      return null;
     };
   }
 
@@ -222,9 +239,9 @@ export class Formulario implements OnInit {
       if (this.isEditMode) return null;
       
       const senha = form.get('senha')?.value;
-      const confirmarSenha = form.get('confirmarSenha')?.value;
+      const confirmacao = form.get('confirmacao')?.value;
       
-      if (senha && confirmarSenha && senha !== confirmarSenha) {
+      if (senha && confirmacao && senha !== confirmacao) {
         return { senhasDiferentes: true };
       }
       return null;
@@ -251,11 +268,11 @@ export class Formulario implements OnInit {
     this.representanteForm.patchValue({ cpfCnpj: valor });
   }
 
-  aplicarMascaraCelular(event: any) {
+  aplicarMascaraTelefone(event: any) {
     const input = event.target;
     let valor = input.value.replace(/\D/g, '');
     valor = maskFone(valor);
-    this.representanteForm.patchValue({ celular: valor });
+    this.representanteForm.patchValue({ telefone: valor });
   }
 
   aplicarMascaraCep(event: any) {
@@ -272,10 +289,10 @@ export class Formulario implements OnInit {
         next: (endereco) => {
           if (!endereco.erro) {
             this.representanteForm.patchValue({
-              endereco: endereco.logradouro,
+              logradouro: endereco.logradouro,
               bairro: endereco.bairro,
               cidade: endereco.localidade,
-              uf: endereco.uf
+              estado: endereco.uf
             });
           }
         },
@@ -294,12 +311,15 @@ export class Formulario implements OnInit {
     switch (tab) {
       case 'dados-pessoais':
         let verificadorDadosPessoais = this.nome?.valid && this.email?.valid && this.tipoPessoa?.valid && 
-               this.cpfCnpj?.valid && this.celular?.valid;
+               this.cpfCnpj?.valid && this.telefone?.valid;
         return typeof verificadorDadosPessoais === 'boolean' ? verificadorDadosPessoais : false;
       case 'endereco':
-        let verificadorEndereco =  this.cep?.valid && this.endereco?.valid && this.numero?.valid && 
-               this.bairro?.valid && this.cidade?.valid && this.uf?.valid;
+        let verificadorEndereco =  this.cep?.valid && this.logradouro?.valid && this.numero?.valid && 
+               this.bairro?.valid && this.cidade?.valid && this.estado?.valid;
         return typeof verificadorEndereco === 'boolean' ? verificadorEndereco : false;
+      case 'dados-conta':
+        let verificadorDadosConta = this.chavePix?.valid && this.percentualComissao?.valid;
+        return typeof verificadorDadosConta === 'boolean' ? verificadorDadosConta : false;
       case 'dados-acesso':
         if (this.isEditMode) return true;
         let verificadorDadosAcesso = this.senha?.valid && !this.representanteForm.errors?.['senhasDiferentes'];
@@ -310,7 +330,9 @@ export class Formulario implements OnInit {
   }
 
   proximaAba() {
-    const tabs = ['dados-pessoais', 'endereco', 'dados-acesso'];
+    const tabs = this.isEditMode ? 
+      ['dados-pessoais', 'endereco', 'dados-conta'] : 
+      ['dados-pessoais', 'endereco', 'dados-conta', 'dados-acesso'];
     const currentIndex = tabs.indexOf(this.activeTab);
     if (currentIndex < tabs.length - 1) {
       this.setActiveTab(tabs[currentIndex + 1]);
@@ -318,7 +340,9 @@ export class Formulario implements OnInit {
   }
 
   abaAnterior() {
-    const tabs = ['dados-pessoais', 'endereco', 'dados-acesso'];
+    const tabs = this.isEditMode ? 
+      ['dados-pessoais', 'endereco', 'dados-conta'] : 
+      ['dados-pessoais', 'endereco', 'dados-conta', 'dados-acesso'];
     const currentIndex = tabs.indexOf(this.activeTab);
     if (currentIndex > 0) {
       this.setActiveTab(tabs[currentIndex - 1]);
@@ -335,17 +359,23 @@ export class Formulario implements OnInit {
           id: this.representanteId,
           nome: this.representanteForm.get('nome')?.value,
           email: this.representanteForm.get('email')?.value,
-          tipoPessoa: this.representanteForm.get('tipoPessoa')?.value,
           cpfCnpj: this.representanteForm.get('cpfCnpj')?.value.replace(/\D/g, ''),
-          celular: this.representanteForm.get('celular')?.value.replace(/\D/g, ''),
-          cep: this.representanteForm.get('cep')?.value.replace(/\D/g, ''),
-          endereco: this.representanteForm.get('endereco')?.value,
-          numero: this.representanteForm.get('numero')?.value,
-          bairro: this.representanteForm.get('bairro')?.value,
-          cidade: this.representanteForm.get('cidade')?.value,
-          uf: this.representanteForm.get('uf')?.value,
-          complemento: this.representanteForm.get('complemento')?.value,
-          status: this.representanteForm.get('status')?.value
+          telefone: this.representanteForm.get('telefone')?.value.replace(/\D/g, ''),
+          tipoPessoa: parseInt(this.representanteForm.get('tipoPessoa')?.value),
+          ativo: this.representanteForm.get('ativo')?.value,
+          endereco: {
+            cep: this.representanteForm.get('cep')?.value.replace(/\D/g, ''),
+            logradouro: this.representanteForm.get('logradouro')?.value,
+            numero: this.representanteForm.get('numero')?.value,
+            complemento: this.representanteForm.get('complemento')?.value,
+            bairro: this.representanteForm.get('bairro')?.value,
+            cidade: this.representanteForm.get('cidade')?.value,
+            estado: this.representanteForm.get('estado')?.value
+          },
+          chavePix: this.representanteForm.get('chavePix')?.value,
+          percentualComissao: this.representanteForm.get('percentualComissao')?.value,
+          nomeFantasia: this.representanteForm.get('nomeFantasia')?.value,
+          inscricaoEstadual: this.representanteForm.get('inscricaoEstadual')?.value
         };
 
         this.representanteService.atualizarRepresentante(representante).subscribe({
@@ -365,17 +395,25 @@ export class Formulario implements OnInit {
         const representante: CreateRepresentanteRequest = {
           nome: this.representanteForm.get('nome')?.value,
           email: this.representanteForm.get('email')?.value,
-          tipoPessoa: this.representanteForm.get('tipoPessoa')?.value,
           cpfCnpj: this.representanteForm.get('cpfCnpj')?.value.replace(/\D/g, ''),
-          celular: this.representanteForm.get('celular')?.value.replace(/\D/g, ''),
-          cep: this.representanteForm.get('cep')?.value.replace(/\D/g, ''),
-          endereco: this.representanteForm.get('endereco')?.value,
-          numero: this.representanteForm.get('numero')?.value,
-          bairro: this.representanteForm.get('bairro')?.value,
-          cidade: this.representanteForm.get('cidade')?.value,
-          uf: this.representanteForm.get('uf')?.value,
-          complemento: this.representanteForm.get('complemento')?.value,
-          senha: this.representanteForm.get('senha')?.value
+          telefone: this.representanteForm.get('telefone')?.value.replace(/\D/g, ''),
+          tipoPessoa: parseInt(this.representanteForm.get('tipoPessoa')?.value),
+          ativo: this.representanteForm.get('ativo')?.value,
+          endereco: {
+            cep: this.representanteForm.get('cep')?.value.replace(/\D/g, ''),
+            logradouro: this.representanteForm.get('logradouro')?.value,
+            numero: this.representanteForm.get('numero')?.value,
+            complemento: this.representanteForm.get('complemento')?.value,
+            bairro: this.representanteForm.get('bairro')?.value,
+            cidade: this.representanteForm.get('cidade')?.value,
+            estado: this.representanteForm.get('estado')?.value
+          },
+          senha: this.representanteForm.get('senha')?.value,
+          confirmacao: this.representanteForm.get('confirmacao')?.value,
+          chavePix: this.representanteForm.get('chavePix')?.value,
+          percentualComissao: this.representanteForm.get('percentualComissao')?.value,
+          nomeFantasia: this.representanteForm.get('nomeFantasia')?.value,
+          inscricaoEstadual: this.representanteForm.get('inscricaoEstadual')?.value
         };
 
         this.representanteService.adicionarRepresentante(representante).subscribe({
@@ -414,15 +452,19 @@ export class Formulario implements OnInit {
   get email() { return this.representanteForm.get('email'); }
   get tipoPessoa() { return this.representanteForm.get('tipoPessoa'); }
   get cpfCnpj() { return this.representanteForm.get('cpfCnpj'); }
-  get celular() { return this.representanteForm.get('celular'); }
+  get telefone() { return this.representanteForm.get('telefone'); }
+  get ativo() { return this.representanteForm.get('ativo'); }
   get cep() { return this.representanteForm.get('cep'); }
-  get endereco() { return this.representanteForm.get('endereco'); }
+  get logradouro() { return this.representanteForm.get('logradouro'); }
   get numero() { return this.representanteForm.get('numero'); }
   get bairro() { return this.representanteForm.get('bairro'); }
   get cidade() { return this.representanteForm.get('cidade'); }
-  get uf() { return this.representanteForm.get('uf'); }
+  get estado() { return this.representanteForm.get('estado'); }
   get complemento() { return this.representanteForm.get('complemento'); }
+  get chavePix() { return this.representanteForm.get('chavePix'); }
+  get percentualComissao() { return this.representanteForm.get('percentualComissao'); }
+  get nomeFantasia() { return this.representanteForm.get('nomeFantasia'); }
+  get inscricaoEstadual() { return this.representanteForm.get('inscricaoEstadual'); }
   get senha() { return this.representanteForm.get('senha'); }
-  get confirmarSenha() { return this.representanteForm.get('confirmarSenha'); }
-  get status() { return this.representanteForm.get('status'); }
+  get confirmacao() { return this.representanteForm.get('confirmacao'); }
 }
