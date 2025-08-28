@@ -6,6 +6,7 @@ import { PerfilUsuarioEnum } from './core/enums/perfil-usuario-enum';
 import { planoRoutes } from './pages/private/administrador/plano/plano.routes';
 import { clienteRoutes } from './pages/private/administrador/cliente/cliente.routes';
 import { representanteRoutes } from './pages/private/administrador/representante/representante.routes';
+import { pedidoRoutes } from './pages/private/administrador/pedido/pedido.routes';
 import { BackofficeLayoutComponent } from './components/layout/backoffice/backoffice.component';
 
 export const routes: Routes = [
@@ -32,6 +33,10 @@ export const routes: Routes = [
       {
         path: 'representantes',
         children: representanteRoutes
+      },
+      {
+        path: 'pedidos',
+        children: pedidoRoutes
       }
       // Adicione aqui outras rotas do administrador, como representantes, etc.
     ]

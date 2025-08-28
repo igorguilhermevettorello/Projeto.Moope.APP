@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef, inject } from '@angular/core';
-import { Cliente } from '../../../../../core/interfaces/cliente.interface';
+import { Cliente, ListaClienteDto } from '../../../../../core/interfaces/cliente.interface';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -15,8 +15,8 @@ import { finalize } from 'rxjs/operators';
   styleUrl: './lista.css'
 })
 export class Lista implements OnInit {
-  clientes: Cliente[] = [];
-  clientesFiltrados: Cliente[] = [];
+  clientes: ListaClienteDto[] = [];
+  clientesFiltrados: ListaClienteDto[] = [];
   termoBusca: string = '';
   isLoading: boolean = false;
 
@@ -73,15 +73,15 @@ export class Lista implements OnInit {
     this.router.navigate(['/administrador/clientes/add']);
   }
 
-  editar(cliente: Cliente) {
+  editar(cliente: ListaClienteDto) {
     this.router.navigate(['/administrador/clientes/edit', cliente.id]);
   }
 
-  alternarStatus(cliente: Cliente) {
+  alternarStatus(cliente: ListaClienteDto) {
     this.setLoading(true);
     
     // Determina qual serviço chamar baseado no status atual
-    const servicoAtualizar = cliente.status 
+    const servicoAtualizar = cliente.ativo 
       ? this.clienteService.inativarCliente(cliente.id)
       : this.clienteService.ativarCliente(cliente.id);
     
@@ -92,12 +92,12 @@ export class Lista implements OnInit {
     ).subscribe({
       next: (clienteAtualizado) => {
         this.carregarClientes();
-        const acao = cliente.status ? 'inativado' : 'ativado';
+        const acao = cliente.ativo ? 'inativado' : 'ativado';
         this.toastService.showSuccess(`Cliente "${cliente.nome}" ${acao} com sucesso!`);
       },
       error: (error) => {
         console.error('Erro ao alternar status do cliente:', error);
-        const acao = cliente.status ? 'inativar' : 'ativar';
+        const acao = cliente.ativo ? 'inativar' : 'ativar';
         const mensagem = typeof error === 'string' ? error : `Erro ao ${acao} o cliente. Tente novamente.`;
         this.toastService.showError(mensagem);
       }

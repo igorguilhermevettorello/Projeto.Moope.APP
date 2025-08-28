@@ -60,11 +60,11 @@
             </span>
           </td>
           <td>{{ formatarCpfCnpj(cliente.cpfCnpj) }}</td>
-          <td>{{ formatarCelular(cliente.celular) }}</td>
-          <td>{{ cliente.cidade }}/{{ cliente.uf }}</td>
+          <td>{{ formatarCelular(cliente.telefone) }}</td>
+          <td>{{ cliente.cidade }}/{{ cliente.estado }}</td>
           <td>
-            <span class="badge" [ngClass]="cliente.status ? 'bg-success' : 'bg-danger'">
-              {{ cliente.status ? 'Ativo' : 'Inativo' }}
+            <span class="badge" [ngClass]="cliente.ativo ? 'bg-success' : 'bg-danger'">
+              {{ cliente.ativo ? 'Ativo' : 'Inativo' }}
             </span>
           </td>
           <td>
@@ -79,9 +79,9 @@
                 class="btn btn-outline-warning btn-sm" 
                 (click)="alternarStatus(cliente)"
                 [disabled]="isLoading">
-                <i class="bi bi-toggle-on" *ngIf="cliente.status"></i>
-                <i class="bi bi-toggle-off" *ngIf="!cliente.status"></i>
-                {{ cliente.status ? 'Inativar' : 'Ativar' }}
+                <i class="bi bi-toggle-on" *ngIf="cliente.ativo"></i>
+                <i class="bi bi-toggle-off" *ngIf="!cliente.ativo"></i>
+                {{ cliente.ativo ? 'Inativar' : 'Ativar' }}
               </button>
             </div>
           </td>

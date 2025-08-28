@@ -121,7 +121,6 @@
                 id="cpfCnpj" 
                 [placeholder]="placeholderCpfCnpj"
                 [maxlength]="tipoPessoa?.value === '1' ? 14 : 18"
-                [disabled]="disabledCpfCnpj"
                 formControlName="cpfCnpj"
                 (input)="aplicarMascaraCpfCnpj($event)"
                 required>
@@ -135,18 +134,18 @@
 
           <div class="row">
             <div class="col-md-6 mb-3">
-              <label for="celular" class="form-label">Celular *</label>
+              <label for="telefone" class="form-label">Telefone *</label>
               <input 
                 type="text" 
                 class="form-control form-control-sm" 
-                [class.is-invalid]="celular?.invalid && celular?.touched"
-                id="celular" 
+                [class.is-invalid]="telefone?.invalid && telefone?.touched"
+                id="telefone" 
                 placeholder="(00) 00000-0000"
-                formControlName="celular"
-                (input)="aplicarMascaraCelular($event)"
+                formControlName="telefone"
+                (input)="aplicarMascaraTelefone($event)"
                 required>
-              <div class="invalid-feedback" *ngIf="celular?.invalid && celular?.touched">
-                <div *ngIf="celular?.errors?.['required']">Celular é obrigatório</div>
+              <div class="invalid-feedback" *ngIf="telefone?.invalid && telefone?.touched">
+                <div *ngIf="telefone?.errors?.['required']">Telefone é obrigatório</div>
               </div>
             </div>
 
@@ -185,17 +184,18 @@
             </div>
 
             <div class="col-md-6 mb-3">
-              <label for="endereco" class="form-label">Endereço *</label>
+              <label for="logradouro" class="form-label">Endereço *</label>
               <input 
                 type="text" 
                 class="form-control form-control-sm" 
-                [class.is-invalid]="endereco?.invalid && endereco?.touched"
-                id="endereco" 
+                [class.is-invalid]="logradouro?.invalid && logradouro?.touched"
+                id="logradouro" 
                 placeholder="Digite o endereço"
-                formControlName="endereco"
+                formControlName="logradouro"
                 required>
-              <div class="invalid-feedback" *ngIf="endereco?.invalid && endereco?.touched">
-                <div *ngIf="endereco?.errors?.['required']">Endereço é obrigatório</div>
+              <div class="invalid-feedback" *ngIf="logradouro?.invalid && logradouro?.touched">
+                <div *ngIf="logradouro?.errors?.['required']">Endereço é obrigatório</div>
+                <div *ngIf="logradouro?.errors?.['minlength']">Endereço deve ter pelo menos 2 caracteres</div>
               </div>
             </div>
 
@@ -247,18 +247,18 @@
             </div>
 
             <div class="col-md-4 mb-3">
-              <label for="uf" class="form-label">UF *</label>
+              <label for="estado" class="form-label">UF *</label>
               <select 
                 class="form-select form-select-sm" 
-                [class.is-invalid]="uf?.invalid && uf?.touched"
-                id="uf" 
-                formControlName="uf"
+                [class.is-invalid]="estado?.invalid && estado?.touched"
+                id="estado" 
+                formControlName="estado"
                 required>
                 <option value="">Selecione o estado</option>
                 <option *ngFor="let estado of estados" [value]="estado">{{ estado }}</option>
               </select>
-              <div class="invalid-feedback" *ngIf="uf?.invalid && uf?.touched">
-                <div *ngIf="uf?.errors?.['required']">UF é obrigatório</div>
+              <div class="invalid-feedback" *ngIf="estado?.invalid && estado?.touched">
+                <div *ngIf="estado?.errors?.['required']">UF é obrigatório</div>
               </div>
             </div>
           </div>

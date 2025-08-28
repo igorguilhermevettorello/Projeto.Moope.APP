@@ -66,6 +66,30 @@ export interface UpdateClienteRequest {
   status: boolean;
 }
 
+export interface UpdateClienteDto {
+  id: string;
+  nome: string;
+  email: string;
+  cpfCnpj: string;
+  telefone: string;
+  tipoPessoa: number;
+  ativo: boolean;
+  endereco: UpdateEnderecoDto;
+  nomeFantasia: string;
+  inscricaoEstadual: string;
+  vendedorId: string | null;
+}
+
+export interface UpdateEnderecoDto {
+  cep: string;
+  logradouro: string;
+  numero: string;
+  complemento?: string;
+  bairro: string;
+  cidade: string;
+  estado: string;
+}
+
 export interface EnderecoDto {
   id: string;
   cep: string;
@@ -82,10 +106,42 @@ export interface CreateClienteDto {
   nome: string;
   email: string;
   cpfCnpj: string;
-  celular: string;
+  telefone: string;
   tipoPessoa: number;
   ativo: boolean;
   endereco: EnderecoDto;
   senha: string;
   confirmacao: string;
+}
+
+export interface ListaClienteDto {
+  id: string;
+  nome: string;
+  email: string;
+  tipoPessoa: number;
+  cpfCnpj: string;
+  telefone: string;
+  cidade: string;
+  estado: string;
+  ativo: boolean;
+}
+
+export interface ClienteDetalheDto {
+  id: string;
+  nome: string;
+  email: string;
+  cpfCnpj: string;
+  telefone: string;
+  tipoPessoa: number;
+  ativo: boolean;
+  cep: string;
+  logradouro: string;
+  numero: string;
+  complemento?: string;
+  bairro: string;
+  cidade: string;
+  estado: string;
+  nomeFantasia: string;
+  inscricaoEstadual: string;
+  vendedorId: string | null;
 }

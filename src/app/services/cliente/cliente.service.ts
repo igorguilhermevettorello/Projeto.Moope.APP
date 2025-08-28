@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { Cliente, CreateClienteRequest, UpdateClienteRequest, CreateClienteDto } from '../../core/interfaces/cliente.interface';
+import { Cliente, CreateClienteRequest, UpdateClienteRequest, CreateClienteDto, ListaClienteDto, UpdateClienteDto, ClienteDetalheDto } from '../../core/interfaces/cliente.interface';
 import { TipoPessoa } from '../../core/interfaces/tipo-pessoa.interface';
 
 @Injectable({
@@ -13,8 +13,8 @@ export class ClienteService {
 
   constructor(private http: HttpClient) { }
   
-  getClientes(): Observable<Cliente[]> {
-    return this.http.get<Cliente[]>(this.baseUrl).pipe(
+  getClientes(): Observable<ListaClienteDto[]> {
+    return this.http.get<ListaClienteDto[]>(this.baseUrl).pipe(
       catchError((error: HttpErrorResponse) => {
         console.error('Erro ao buscar clientes:', error);
         const mensagem = this.obterMensagemErro(error, 'Erro ao carregar lista de clientes');
@@ -23,8 +23,8 @@ export class ClienteService {
     );
   }
 
-  getClienteById(id: string): Observable<Cliente> {
-    return this.http.get<Cliente>(`${this.baseUrl}/${id}`).pipe(
+  getClienteById(id: string): Observable<ClienteDetalheDto> {
+    return this.http.get<ClienteDetalheDto>(`${this.baseUrl}/${id}`).pipe(
       catchError((error: HttpErrorResponse) => {
         console.error(`Erro ao buscar cliente com ID ${id}:`, error);
         const mensagem = this.obterMensagemErro(error, 'Erro ao buscar cliente');
@@ -46,7 +46,7 @@ export class ClienteService {
     );
   }
 
-  atualizarCliente(cliente: UpdateClienteRequest): Observable<Cliente> {
+  atualizarCliente(cliente: UpdateClienteDto): Observable<Cliente> {
     return this.http.put<Cliente>(`${this.baseUrl}/${cliente.id}`, cliente).pipe(
       catchError((error: HttpErrorResponse) => {
         console.error(`Erro ao atualizar cliente com ID ${cliente.id}:`, error);

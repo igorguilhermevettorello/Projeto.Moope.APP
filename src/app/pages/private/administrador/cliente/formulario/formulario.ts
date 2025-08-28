@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Cliente, CreateClienteRequest, UpdateClienteRequest, CreateClienteDto } from '../../../../../core/interfaces/cliente.interface';
+import { Cliente, CreateClienteRequest, UpdateClienteRequest, CreateClienteDto, UpdateEnderecoDto, UpdateClienteDto } from '../../../../../core/interfaces/cliente.interface';
 import { TipoPessoa } from '../../../../../core/interfaces/tipo-pessoa.interface';
 import { ClienteService } from '../../../../../services/cliente/cliente.service';
 import { ToastService } from '../../../../../shared/toast/toast.service';
@@ -34,10 +34,10 @@ export class Formulario implements OnInit {
 
   labelCpfCnpj: string = 'CPF / CNPJ';
   placeholderCpfCnpj: string = 'Selecione o tipo de pessoa';
-  disabledCpfCnpj: boolean = false;
+  // disabledCpfCnpj: boolean = false;
 
   formularioCliente: any = {
-    "dados-pessoais": ["nome", "email", "tipoPessoa", "cpfCnpj", "celular"],
+    "dados-pessoais": ["nome", "email", "tipoPessoa", "cpfCnpj", "telefone"],
     "endereco": ["cep", "endereco", "numero", "bairro", "cidade", "uf", "complemento"],    
     "dados-acesso": ["senha", "confirmarSenha"]
   }
@@ -55,15 +55,15 @@ export class Formulario implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       tipoPessoa: ['', [Validators.required]],
       cpfCnpj: ['', [Validators.required]],
-      celular: ['', [Validators.required]],
+      telefone: ['', [Validators.required]],
       
       // Endereço
       cep: ['', [Validators.required, Validators.pattern(/^\d{5}-?\d{3}$/)]],
-      endereco: ['', [Validators.required]],
+      logradouro: ['', [Validators.required]],
       numero: ['', [Validators.required]],
       bairro: ['', [Validators.required]],
       cidade: ['', [Validators.required]],
-      uf: ['', [Validators.required]],
+      estado: ['', [Validators.required]],
       complemento: [''],
       
       // Dados de Acesso (apenas na criação)
@@ -140,17 +140,17 @@ export class Formulario implements OnInit {
       // No modo de edição, desabilita os campos de senha e CPF/CNPJ
       this.clienteForm.get('senha')?.disable();
       this.clienteForm.get('confirmarSenha')?.disable();
-      this.clienteForm.get('cpfCnpj')?.disable();
-      this.disabledCpfCnpj = true;
+      // this.clienteForm.get('cpfCnpj')?.disable();
+      // this.disabledCpfCnpj = true;
       return;
     }
     
     if (disabled) {
       this.clienteForm.disable();
-      this.disabledCpfCnpj = true;
+      // this.disabledCpfCnpj = true;
     } else {
       this.clienteForm.enable();
-      this.disabledCpfCnpj = false;
+      // this.disabledCpfCnpj = false;
     }
   }
 
@@ -161,21 +161,21 @@ export class Formulario implements OnInit {
       next: (cliente) => {
         // Armazena informações completas do cliente
         this.clienteInfo = cliente;
-        
+        console.log("cliente", cliente.logradouro);
         this.clienteForm.patchValue({
           nome: cliente.nome,
           email: cliente.email,
           tipoPessoa: cliente.tipoPessoa,
-          cpfCnpj: cliente.cpfCnpj,
-          celular: cliente.celular,
-          cep: cliente.cep,
-          endereco: cliente.endereco,
+          cpfCnpj: cliente.tipoPessoa === 1 ? maskCpf(cliente.cpfCnpj) : maskCnpj(cliente.cpfCnpj),
+          telefone: maskFone(cliente.telefone),
+          cep: maskCep(cliente.cep),
+          logradouro: cliente.logradouro,
           numero: cliente.numero,
           bairro: cliente.bairro,
           cidade: cliente.cidade,
-          uf: cliente.uf,
+          estado: cliente.estado,
           complemento: cliente.complemento,
-          status: cliente.status
+          status: cliente.ativo
         });
         this.isLoading = false;
         this.setFormDisabledState(false);
@@ -219,8 +219,12 @@ export class Formulario implements OnInit {
     return (control: any) => {
       const cpf = control.value?.replace(/\D/g, '');
       const rs = validatorCpf(cpf);
-      if (rs) control?.updateValueAndValidity();
-      return { cpfInvalido: !rs }
+      // if (rs) control?.updateValueAndValidity();
+      // return { cpfInvalido: !rs }
+      if (!rs) {
+        return { cpfInvalido: rs }
+      }
+      return null;
     };
   }
 
@@ -228,8 +232,12 @@ export class Formulario implements OnInit {
     return (control: any) => {
       const cnpj = control.value?.replace(/\D/g, '');
       const rs = validatorCnpj(cnpj);
-      if (rs) control?.updateValueAndValidity();
-      return { cnpjInvalido: rs }
+      // if (rs) control?.updateValueAndValidity();
+      // return { cnpjInvalido: rs }
+      if (!rs) {
+        return { cnpjInvalido: rs }
+      }
+      return null;
     };
   }
 
@@ -267,11 +275,11 @@ export class Formulario implements OnInit {
     this.clienteForm.patchValue({ cpfCnpj: valor });
   }
 
-  aplicarMascaraCelular(event: any) {
+  aplicarMascaraTelefone(event: any) {
     const input = event.target;
     let valor = input.value.replace(/\D/g, '');
     valor = maskFone(valor);
-    this.clienteForm.patchValue({ celular: valor });
+    this.clienteForm.patchValue({ telefone: valor });
   }
 
   aplicarMascaraCep(event: any) {
@@ -283,23 +291,23 @@ export class Formulario implements OnInit {
 
   buscarCep() {
     const cep = this.clienteForm.get('cep')?.value?.replace(/\D/g, '');
-    if (cep && cep.length === 8) {
-      this.clienteService.buscarEnderecoPorCep(cep).subscribe({
-        next: (endereco) => {
-          if (!endereco.erro) {
-            this.clienteForm.patchValue({
-              endereco: endereco.logradouro,
-              bairro: endereco.bairro,
-              cidade: endereco.localidade,
-              uf: endereco.uf
-            });
-          }
-        },
-        error: (error) => {
-          console.warn('Erro ao buscar CEP:', error);
-        }
-      });
-    }
+    // if (cep && cep.length === 8) {
+    //   this.clienteService.buscarEnderecoPorCep(cep).subscribe({
+    //     next: (endereco) => {
+    //       if (!endereco.erro) {
+    //         this.clienteForm.patchValue({
+    //           endereco: endereco.logradouro,
+    //           bairro: endereco.bairro,
+    //           cidade: endereco.localidade,
+    //           uf: endereco.uf
+    //         });
+    //       }
+    //     },
+    //     error: (error) => {
+    //       console.warn('Erro ao buscar CEP:', error);
+    //     }
+    //   });
+    // }
   }
 
   setActiveTab(tab: string) {
@@ -310,11 +318,11 @@ export class Formulario implements OnInit {
     switch (tab) {
       case 'dados-pessoais':
         let verificadorDadosPessoais = this.nome?.valid && this.email?.valid && this.tipoPessoa?.valid && 
-               this.cpfCnpj?.valid && this.celular?.valid;
+               this.cpfCnpj?.valid && this.telefone?.valid;
         return typeof verificadorDadosPessoais === 'boolean' ? verificadorDadosPessoais : false;
       case 'endereco':
-        let verificadorEndereco =  this.cep?.valid && this.endereco?.valid && this.numero?.valid && 
-               this.bairro?.valid && this.cidade?.valid && this.uf?.valid;
+        let verificadorEndereco =  this.cep?.valid && this.logradouro?.valid && this.numero?.valid && 
+               this.bairro?.valid && this.cidade?.valid && this.estado?.valid;
         return typeof verificadorEndereco === 'boolean' ? verificadorEndereco : false;
       case 'dados-conta':
         // A aba de dados da conta é sempre válida, pois o status é opcional e não obrigatório
@@ -354,21 +362,28 @@ export class Formulario implements OnInit {
       this.setFormDisabledState(true);
       
       if (this.isEditMode) {
-        const cliente: UpdateClienteRequest = {
+        const endereco: UpdateEnderecoDto = {
+          cep: this.clienteForm.get('cep')?.value.replace(/\D/g, ''),
+          logradouro: this.clienteForm.get('endereco')?.value,
+          numero: this.clienteForm.get('numero')?.value,
+          complemento: this.clienteForm.get('complemento')?.value,
+          bairro: this.clienteForm.get('bairro')?.value,
+          cidade: this.clienteForm.get('cidade')?.value,
+          estado: this.clienteForm.get('uf')?.value,
+        } 
+
+        const cliente: UpdateClienteDto = {
           id: this.clienteId,
           nome: this.clienteForm.get('nome')?.value,
           email: this.clienteForm.get('email')?.value,
-          tipoPessoa: this.clienteForm.get('tipoPessoa')?.value,
+          tipoPessoa: parseInt(this.clienteForm.get('tipoPessoa')?.value),
           cpfCnpj: this.clienteForm.get('cpfCnpj')?.value.replace(/\D/g, ''),
-          celular: this.clienteForm.get('celular')?.value.replace(/\D/g, ''),
-          cep: this.clienteForm.get('cep')?.value.replace(/\D/g, ''),
-          endereco: this.clienteForm.get('endereco')?.value,
-          numero: this.clienteForm.get('numero')?.value,
-          bairro: this.clienteForm.get('bairro')?.value,
-          cidade: this.clienteForm.get('cidade')?.value,
-          uf: this.clienteForm.get('uf')?.value,
-          complemento: this.clienteForm.get('complemento')?.value,
-          status: this.clienteForm.get('status')?.value
+          telefone: this.clienteForm.get('telefone')?.value.replace(/\D/g, ''),
+          endereco: endereco,
+          nomeFantasia: '',
+          inscricaoEstadual: '',
+          vendedorId: null,
+          ativo: this.clienteForm.get('status')?.value
         };
 
         this.clienteService.atualizarCliente(cliente).subscribe({
@@ -390,7 +405,7 @@ export class Formulario implements OnInit {
           nome: this.clienteForm.get('nome')?.value,
           email: this.clienteForm.get('email')?.value,
           cpfCnpj: this.clienteForm.get('cpfCnpj')?.value.replace(/\D/g, ''),
-          celular: this.clienteForm.get('celular')?.value.replace(/\D/g, ''),
+          telefone: this.clienteForm.get('telefone')?.value.replace(/\D/g, ''),
           tipoPessoa: parseInt(this.clienteForm.get('tipoPessoa')?.value, 10),
           ativo: true,
           endereco: {
@@ -459,13 +474,13 @@ export class Formulario implements OnInit {
   get email() { return this.clienteForm.get('email'); }
   get tipoPessoa() { return this.clienteForm.get('tipoPessoa'); }
   get cpfCnpj() { return this.clienteForm.get('cpfCnpj'); }
-  get celular() { return this.clienteForm.get('celular'); }
+  get telefone() { return this.clienteForm.get('telefone'); }
   get cep() { return this.clienteForm.get('cep'); }
-  get endereco() { return this.clienteForm.get('endereco'); }
+  get logradouro() { return this.clienteForm.get('logradouro'); }
   get numero() { return this.clienteForm.get('numero'); }
   get bairro() { return this.clienteForm.get('bairro'); }
   get cidade() { return this.clienteForm.get('cidade'); }
-  get uf() { return this.clienteForm.get('uf'); }
+  get estado() { return this.clienteForm.get('estado'); }
   get complemento() { return this.clienteForm.get('complemento'); }
   get senha() { return this.clienteForm.get('senha'); }
   get confirmarSenha() { return this.clienteForm.get('confirmarSenha'); }
