@@ -4,6 +4,7 @@ import { PlanosComponent } from '../../../components/planos/planos.component';
 import { StepsPagamentoComponent } from '../../../components/steps-pagamento/steps-pagamento.component';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ToastService } from '../../../shared/toast/toast.service';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-home',
@@ -15,6 +16,9 @@ import { ToastService } from '../../../shared/toast/toast.service';
 export class HomePage {
   public cupom: string | null = null;
   public plano: string | null = null;
+
+  readonly codBasico = environment.planos.basico;
+  readonly codPremium = environment.planos.premium;
 
   constructor(
     private route: ActivatedRoute,
@@ -28,7 +32,7 @@ export class HomePage {
   }
 
   public get planoSelecionado(): boolean {
-    return this.plano === '1234' || this.plano === '9876';
+    return this.plano === this.codBasico || this.plano === this.codPremium;
   }
 
   // Métodos para testar o toast

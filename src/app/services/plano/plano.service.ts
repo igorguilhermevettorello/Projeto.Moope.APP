@@ -32,6 +32,16 @@ export class PlanoService {
     );
   }
 
+  getPlanoSelecionado(codigo: string): Observable<Plano> {
+    return this.http.get<Plano>(`${this.baseUrl}/selecionado/${codigo}`).pipe(
+      catchError((error: HttpErrorResponse) => {
+        console.error(`Erro ao buscar plano selecionado com código ${codigo}:`, error);
+        const mensagem = this.obterMensagemErro(error, 'Erro ao buscar plano selecionado');
+        return throwError(() => mensagem);
+      })
+    );
+  }
+
   adicionarPlano(plano: Plano): Observable<Plano> {
     return this.http.post<Plano>(this.baseUrl, plano).pipe(
       catchError((error: HttpErrorResponse) => {

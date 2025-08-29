@@ -1,10 +1,46 @@
+<!-- Alerta de Erro -->
+<div *ngIf="mostrarErro" class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+  <div class="d-flex align-items-center">
+    <i class="fas fa-exclamation-triangle me-2"></i>
+    <div class="flex-grow-1">
+      <strong>Erro no Pagamento!</strong>
+      <div class="small">{{ mensagemErro }}</div>
+    </div>
+  </div>
+  <button type="button" class="btn-close" (click)="fecharErro()" aria-label="Fechar"></button>
+</div>
+
 <div class="steps-container">
   <div class="step" [class.active]="stepIndex === 1">1. Dados Pessoais</div>
-  <div class="step" [class.active]="stepIndex === 2">2. Pagamento</div>
-  <div class="step" [class.active]="stepIndex === 3">3. Confirmação</div>
+  <div class="step" [class.active]="stepIndex === 2">2. Pedido</div>
+  <div class="step" [class.active]="stepIndex === 3">3. Pagamento</div>
 </div>
-<ng-container [ngSwitch]="stepIndex">
-  <app-step-dados-pessoais *ngSwitchCase="1" (next)="nextStep()"></app-step-dados-pessoais>
-  <app-step-pedido *ngSwitchCase="2" (next)="nextStep()" [plano]="plano"></app-step-pedido>
-  <app-step-cartao-credito *ngSwitchCase="3" (finalizar)="finalizarPagamento($event)"></app-step-cartao-credito>
-</ng-container> 
+<!-- Step 1: Dados Pessoais -->
+<app-step-dados-pessoais 
+  [style.display]="stepIndex === 1 ? 'block' : 'none'"
+  (next)="onDadosPessoaisNext($event)"
+  (formReady)="onFormDadosPessoaisReady($event)"
+  [dadosIniciais]="dadosPessoais"
+  [errosValidacao]="errosValidacao">
+</app-step-dados-pessoais>
+
+<!-- Step 2: Pedido -->
+<app-step-pedido 
+  [style.display]="stepIndex === 2 ? 'block' : 'none'"
+  (next)="onPedidoNext($event)" 
+  (formReady)="onFormPedidoReady($event)"
+  [plano]="plano"
+  [dadosIniciais]="dadosPedido">
+</app-step-pedido>
+
+<!-- Step 3: Cartão de Crédito -->
+<app-step-cartao-credito 
+  [style.display]="stepIndex === 3 ? 'block' : 'none'"
+  (finalizar)="finalizarPagamento($event)"
+  [dadosPessoais]="dadosPessoais"
+  [dadosPedido]="dadosPedido"
+  [planoId]="planoId"
+  [dadosIniciais]="null"
+  [formDadosPessoais]="formDadosPessoais"
+  [formPedido]="formPedido">
+</app-step-cartao-credito> 

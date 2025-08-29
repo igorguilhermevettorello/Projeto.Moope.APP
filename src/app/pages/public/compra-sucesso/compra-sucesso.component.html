@@ -1,0 +1,115 @@
+<div class="container-fluid min-vh-100 d-flex align-items-center justify-content-center bg-light">
+  <div class="row w-100 justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6">
+      <div class="card border-0 shadow-lg">
+        <div class="card-body p-5 text-center">
+          <!-- Loading State -->
+          <div *ngIf="isLoading" class="text-center">
+            <div class="spinner-border text-primary mb-3" role="status">
+              <span class="visually-hidden">Carregando...</span>
+            </div>
+            <p class="text-muted">Carregando informações da compra...</p>
+          </div>
+
+          <!-- Success Content -->
+          <div *ngIf="!isLoading && plano" class="success-content">
+            <!-- Success Icon -->
+            <div class="success-icon mb-4">
+              <div class="bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center" 
+                   style="width: 80px; height: 80px; font-size: 2rem;">
+                <i class="fas fa-check"></i>
+              </div>
+            </div>
+
+            <!-- Success Message -->
+            <h2 class="text-success mb-3 fw-bold">Compra Efetuada com Sucesso!</h2>
+            <p class="text-muted mb-4 fs-5">
+              Parabéns! Sua compra foi processada com sucesso e você já pode começar a usar o sistema.
+            </p>
+
+            <!-- Product Information -->
+            <div class="product-info bg-light rounded-3 p-4 mb-4">
+              <h5 class="text-primary mb-3">
+                <i class="fas fa-box me-2"></i>
+                Produto Adquirido
+              </h5>
+              <div class="row g-3">
+                <div class="col-12">
+                  <div class="d-flex align-items-center p-3 bg-white rounded-3 border">
+                    <div class="flex-shrink-0">
+                      <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" 
+                           style="width: 50px; height: 50px;">
+                        <i class="fas fa-shield-alt"></i>
+                      </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3 text-start">
+                      <h6 class="mb-1 fw-bold text-dark">{{ plano.descricao }}</h6>
+                      <small class="text-muted">Plano de acesso ao sistema</small>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="text-center p-3 bg-white rounded-3 border">
+                    <div class="text-muted small mb-1">Quantidade</div>
+                    <div class="h5 mb-0 fw-bold text-primary">{{ quantidade }}</div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="text-center p-3 bg-white rounded-3 border">
+                    <div class="text-muted small mb-1">Valor Total</div>
+                    <div class="h5 mb-0 fw-bold text-success">{{ valorTotal | moedaBrasileira }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Transaction Information -->
+            <div *ngIf="vendaId || transacaoId" class="transaction-info bg-light rounded-3 p-3 mb-4">
+              <h6 class="text-primary mb-2">
+                <i class="fas fa-receipt me-2"></i>
+                Informações da Transação
+              </h6>
+              <div class="row g-2 text-start">
+                <div *ngIf="vendaId" class="col-12">
+                  <small class="text-muted">ID da Venda:</small>
+                  <div class="fw-bold">{{ vendaId }}</div>
+                </div>
+                <div *ngIf="transacaoId" class="col-12">
+                  <small class="text-muted">ID da Transação:</small>
+                  <div class="fw-bold">{{ transacaoId }}</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Email Information -->
+            <div class="email-info bg-info bg-opacity-10 rounded-3 p-4 mb-4">
+              <div class="d-flex align-items-center mb-3">
+                <div class="bg-info text-white rounded-circle d-flex align-items-center justify-content-center me-3" 
+                     style="width: 40px; height: 40px;">
+                  <i class="fas fa-envelope"></i>
+                </div>
+                <h6 class="mb-0 text-info fw-bold">Email de Confirmação</h6>
+              </div>
+              <p class="text-muted mb-0">
+                Em breve você receberá um email com todas as informações de acesso ao sistema, 
+                incluindo suas credenciais de login e instruções para começar a usar a plataforma.
+              </p>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+              <button type="button" class="btn btn-outline-primary btn-lg px-4" (click)="voltarParaHome()">
+                <i class="fas fa-home me-2"></i>
+                Voltar ao Início
+              </button>
+              <button type="button" class="btn btn-primary btn-lg px-4" (click)="acessarDashboard()">
+                <i class="fas fa-tachometer-alt me-2"></i>
+                Acessar Dashboard
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

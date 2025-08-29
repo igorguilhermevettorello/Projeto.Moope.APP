@@ -1,8 +1,8 @@
 export const environment = {
   production: false,
   planos: {
-    basico: '1234',
-    premium: '9876'
+    basico: '3787',
+    premium: '3789'
   },
   apiBaseUrl: 'http://localhost:5120',
   apiBaseUrlWindows: 'https://localhost:7176',

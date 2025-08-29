@@ -1,28 +1,96 @@
-<form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
-  <div class="mb-3">
-    <label for="produto" class="form-label">Produto</label>
-    <input type="text" class="form-control form-control-sm" id="produto" formControlName="produto" placeholder="Digite o produto" [ngClass]="{'is-invalid': form.get('produto')?.invalid && form.get('produto')?.touched}" />
-    <div class="invalid-feedback" *ngIf="form.get('produto')?.invalid && form.get('produto')?.touched">
-      Produto é obrigatório.
+<div *ngIf="isLoading" class="text-center">
+  <div class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">Carregando...</span>
+  </div>
+  <p class="mt-2">Carregando informações do plano...</p>
+</div>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate *ngIf="!isLoading">
+  <!-- Card do Plano Selecionado -->
+  <div class="card border-0 shadow-sm mb-4">
+    <div class="card-header bg-primary text-white">
+      <h5 class="card-title mb-0 d-flex align-items-center">
+        <i class="fas fa-box me-2"></i>
+        Plano Selecionado
+      </h5>
+    </div>
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-12">
+          <div class="d-flex align-items-center p-3 bg-light rounded-3">
+            <div class="flex-shrink-0">
+              <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                <i class="fas fa-shield-alt"></i>
+              </div>
+            </div>
+            <div class="flex-grow-1 ms-3">
+              <h6 class="mb-1 fw-bold text-dark">{{ planoSelecionado?.descricao || 'Carregando...' }}</h6>
+            </div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="text-center p-3 border rounded-3">
+            <div class="text-muted small mb-1">Valor Unitário</div>
+            <div class="h5 mb-0 fw-bold text-success">{{ valorUnitario | moedaBrasileira }}</div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="text-center p-3 border rounded-3">
+            <div class="text-muted small mb-1">Quantidade</div>
+            <div class="h5 mb-0 fw-bold text-primary">{{ quantidade }}</div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-  <div class="mb-3">
-    <label for="quantidade" class="form-label">Quantidade</label>
-    <input type="number" class="form-control form-control-sm" id="quantidade" formControlName="quantidade" min="1" placeholder="Digite a quantidade" [ngClass]="{'is-invalid': form.get('quantidade')?.invalid && form.get('quantidade')?.touched}" />
-    <div class="invalid-feedback" *ngIf="form.get('quantidade')?.invalid && form.get('quantidade')?.touched">
-      Quantidade deve ser maior que 0.
+
+  <!-- Seção de Quantidade -->
+  <div class="card border-0 shadow-sm mb-4">
+    <div class="card-header bg-light">
+      <h6 class="card-title mb-0 d-flex align-items-center">
+        <i class="fas fa-calculator me-2 text-primary"></i>
+        Ajustar Quantidade
+      </h6>
+    </div>
+    <div class="card-body">
+      <div class="row align-items-center">
+        <div class="col-md-6">
+          <label for="quantidade" class="form-label fw-semibold">Quantidade desejada</label>
+          <div class="input-group">
+            <span class="input-group-text bg-primary text-white">
+              <i class="fas fa-hashtag"></i>
+            </span>
+            <input 
+              type="text" 
+              class="form-control form-control-lg text-center fw-bold" 
+              id="quantidade" 
+              formControlName="quantidade" 
+              placeholder="1"
+              [ngClass]="{'is-invalid': form.get('quantidade')?.invalid && form.get('quantidade')?.touched}"
+              (input)="onQuantidadeInput($event)"
+            />
+          </div>
+          <div class="invalid-feedback" *ngIf="form.get('quantidade')?.invalid && form.get('quantidade')?.touched">
+            <ng-container *ngIf="form.get('quantidade')?.errors?.['required']">Quantidade é obrigatória.</ng-container>
+            <ng-container *ngIf="form.get('quantidade')?.errors?.['min']">Quantidade deve ser maior que 0.</ng-container>
+            <ng-container *ngIf="form.get('quantidade')?.errors?.['integerInvalid']">Digite apenas números inteiros maiores que 0.</ng-container>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="text-center p-4 bg-gradient bg-primary text-white rounded-3">
+            <div class="small mb-1 opacity-75">Valor Total</div>
+            <div class="h3 mb-0 fw-bold">{{ valorTotal | moedaBrasileira }}</div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-  <div class="mb-3">
-    <label for="valor" class="form-label">Valor</label>
-    <input type="number" class="form-control form-control-sm" id="valor" formControlName="valor" min="0.01" step="0.01" placeholder="Digite o valor" [ngClass]="{'is-invalid': form.get('valor')?.invalid && form.get('valor')?.touched}" />
-    <div class="invalid-feedback" *ngIf="form.get('valor')?.invalid && form.get('valor')?.touched">
-      Valor deve ser maior que 0.
-    </div>
+
+  <!-- Botão de Ação -->
+  <div class="d-grid">
+      <button type="submit" class="step-button" [disabled]="!planoSelecionado || form.invalid">
+    <i class="fas fa-arrow-right me-2"></i>
+    Continuar para Pagamento
+  </button>
   </div>
-  <div class="mb-3">
-    <label for="total" class="form-label">Total</label>
-    <input type="text" class="form-control form-control-sm" id="total" formControlName="total" [ariaDisabled]="true" />
-  </div>
-  <button type="submit" class="btn btn-primary w-100">Próximo</button>
 </form> 

@@ -12,6 +12,7 @@ import { BackofficeLayoutComponent } from './components/layout/backoffice/backof
 export const routes: Routes = [
   { path: '', component: HomePage },
   { path: 'login', loadComponent: () => import('./pages/public/auth/login/login').then(m => m.Login) },
+  { path: 'compra-sucesso', loadComponent: () => import('./pages/public/compra-sucesso/compra-sucesso.component').then(m => m.CompraSucessoComponent) },
   {
     path: 'administrador',
     component: BackofficeLayoutComponent,

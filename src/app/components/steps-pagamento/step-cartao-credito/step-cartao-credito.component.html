@@ -1,31 +1,101 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
   <div class="mb-3">
-    <label for="nomeCartao" class="form-label">Nome do cartão de crédito</label>
-    <input type="text" class="form-control form-control-sm" id="nomeCartao" formControlName="nomeCartao" placeholder="Nome impresso no cartão" [ngClass]="{'is-invalid': form.get('nomeCartao')?.invalid && form.get('nomeCartao')?.touched}" />
+    <label for="nomeCartao" class="form-label">Nome do portador</label>
+    <input 
+      type="text" 
+      class="form-control form-control-sm" 
+      id="nomeCartao" 
+      formControlName="nomeCartao" 
+      placeholder="Nome como está no cartão"
+      maxlength="50"
+      [ngClass]="{'is-invalid': form.get('nomeCartao')?.invalid && form.get('nomeCartao')?.touched}"
+      (input)="aplicarMascaraNome($event)"
+    />
     <div class="invalid-feedback" *ngIf="form.get('nomeCartao')?.invalid && form.get('nomeCartao')?.touched">
-      Nome do cartão é obrigatório.
+      <ng-container *ngIf="form.get('nomeCartao')?.errors?.['serverError']">{{ form.get('nomeCartao')?.errors?.['serverError'] }}</ng-container>
+      <ng-container *ngIf="!form.get('nomeCartao')?.errors?.['serverError']">
+        <ng-container *ngIf="form.get('nomeCartao')?.errors?.['required']">Nome do portador é obrigatório.</ng-container>
+        <ng-container *ngIf="form.get('nomeCartao')?.errors?.['minlength']">Nome deve ter pelo menos 2 caracteres.</ng-container>
+        <ng-container *ngIf="form.get('nomeCartao')?.errors?.['maxlength']">Nome deve ter no máximo 50 caracteres.</ng-container>
+        <ng-container *ngIf="form.get('nomeCartao')?.errors?.['pattern']">Nome deve conter apenas letras e espaços.</ng-container>
+      </ng-container>
     </div>
   </div>
+  
   <div class="mb-3">
-    <label for="numeroCartao" class="form-label">Número do cartão de crédito</label>
-    <input type="text" maxlength="16" class="form-control form-control-sm" id="numeroCartao" formControlName="numeroCartao" placeholder="Somente números" [ngClass]="{'is-invalid': form.get('numeroCartao')?.invalid && form.get('numeroCartao')?.touched}" />
+    <label for="numeroCartao" class="form-label">Número do cartão</label>
+    <input 
+      type="text" 
+      class="form-control form-control-sm" 
+      id="numeroCartao" 
+      formControlName="numeroCartao" 
+      placeholder="0000 0000 0000 0000"
+      maxlength="23"
+      [ngClass]="{'is-invalid': form.get('numeroCartao')?.invalid && form.get('numeroCartao')?.touched}"
+      (input)="aplicarMascaraCartao($event)"
+    />
     <div class="invalid-feedback" *ngIf="form.get('numeroCartao')?.invalid && form.get('numeroCartao')?.touched">
-      Número do cartão deve ter 16 dígitos.
+      <ng-container *ngIf="form.get('numeroCartao')?.errors?.['serverError']">{{ form.get('numeroCartao')?.errors?.['serverError'] }}</ng-container>
+      <ng-container *ngIf="!form.get('numeroCartao')?.errors?.['serverError']">
+        <ng-container *ngIf="form.get('numeroCartao')?.errors?.['required']">Número do cartão é obrigatório.</ng-container>
+        <ng-container *ngIf="form.get('numeroCartao')?.errors?.['cartaoInvalido']">{{ form.get('numeroCartao')?.errors?.['cartaoInvalido'] }}</ng-container>
+      </ng-container>
     </div>
   </div>
-  <div class="mb-3">
-    <label for="cvv" class="form-label">CVV</label>
-    <input type="text" maxlength="4" class="form-control form-control-sm" id="cvv" formControlName="cvv" placeholder="CVV" [ngClass]="{'is-invalid': form.get('cvv')?.invalid && form.get('cvv')?.touched}" />
-    <div class="invalid-feedback" *ngIf="form.get('cvv')?.invalid && form.get('cvv')?.touched">
-      CVV é obrigatório (3 ou 4 dígitos).
+  
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <label for="validade" class="form-label">Validade</label>
+      <input 
+        type="text" 
+        class="form-control form-control-sm" 
+        id="validade" 
+        formControlName="validade" 
+        placeholder="MM/AA"
+        maxlength="5"
+        [ngClass]="{'is-invalid': form.get('validade')?.invalid && form.get('validade')?.touched}"
+        (input)="aplicarMascaraValidade($event)"
+      />
+      <div class="invalid-feedback" *ngIf="form.get('validade')?.invalid && form.get('validade')?.touched">
+        <ng-container *ngIf="form.get('validade')?.errors?.['serverError']">{{ form.get('validade')?.errors?.['serverError'] }}</ng-container>
+        <ng-container *ngIf="!form.get('validade')?.errors?.['serverError']">
+          <ng-container *ngIf="form.get('validade')?.errors?.['required']">Validade é obrigatória.</ng-container>
+          <ng-container *ngIf="form.get('validade')?.errors?.['validadeInvalida']">{{ form.get('validade')?.errors?.['validadeInvalida'] }}</ng-container>
+          <ng-container *ngIf="form.get('validade')?.errors?.['validadeExpirada']">{{ form.get('validade')?.errors?.['validadeExpirada'] }}</ng-container>
+        </ng-container>
+      </div>
+    </div>
+    
+    <div class="col-md-6 mb-3">
+      <label for="cvv" class="form-label">CVV</label>
+      <input 
+        type="text" 
+        class="form-control form-control-sm" 
+        id="cvv" 
+        formControlName="cvv" 
+        placeholder="123"
+        maxlength="4"
+        [ngClass]="{'is-invalid': form.get('cvv')?.invalid && form.get('cvv')?.touched}"
+        (input)="aplicarMascaraCvv($event)"
+      />
+      <div class="invalid-feedback" *ngIf="form.get('cvv')?.invalid && form.get('cvv')?.touched">
+        <ng-container *ngIf="form.get('cvv')?.errors?.['serverError']">{{ form.get('cvv')?.errors?.['serverError'] }}</ng-container>
+        <ng-container *ngIf="!form.get('cvv')?.errors?.['serverError']">
+          <ng-container *ngIf="form.get('cvv')?.errors?.['required']">CVV é obrigatório.</ng-container>
+          <ng-container *ngIf="form.get('cvv')?.errors?.['cvvInvalido']">{{ form.get('cvv')?.errors?.['cvvInvalido'] }}</ng-container>
+        </ng-container>
+      </div>
     </div>
   </div>
-  <div class="mb-3">
-    <label for="validade" class="form-label">Validade</label>
-    <input type="text" class="form-control form-control-sm" id="validade" formControlName="validade" placeholder="MM/AA" [ngClass]="{'is-invalid': form.get('validade')?.invalid && form.get('validade')?.touched}" />
-    <div class="invalid-feedback" *ngIf="form.get('validade')?.invalid && form.get('validade')?.touched">
-      Validade é obrigatória.
-    </div>
-  </div>
-  <button type="submit" class="btn btn-success w-100">Finalizar</button>
+  
+  <button type="submit" class="step-button" [disabled]="form.invalid || isLoading">
+    <span *ngIf="!isLoading">
+      <i class="fas fa-credit-card me-2"></i>
+      Finalizar Pagamento
+    </span>
+    <span *ngIf="isLoading">
+      <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+      Processando...
+    </span>
+  </button>
 </form> 
